@@ -66,7 +66,7 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 }
 
 // MGet accept proto payload with Storage and Item
-func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error {
+func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 	const op = errors.Op("rpc_mget")
 
 	keys := make([]string, 0, len(in.GetItems()))
@@ -111,7 +111,7 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 }
 
 // TTL accept proto payload with Storage and Item
-func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error {
+func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 	const op = errors.Op("rpc_ttl")
 	keys := make([]string, 0, len(in.GetItems()))
 
