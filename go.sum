@@ -182,6 +182,8 @@ github.com/prometheus/procfs v0.6.0/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1
 github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1xBZuNvfVA=
 github.com/roadrunner-server/api/v2 v2.10.0 h1:ahpoGx33gltyloPTvEwyq3lNastPXBsbXqjZ26FmYu8=
 github.com/roadrunner-server/api/v2 v2.10.0/go.mod h1:jQ0rWRiuVozw4G8ASgx0YEwxDqMOD4NdestaJanPcM0=
+github.com/roadrunner-server/api/v2 v2.11.0 h1:TKKrG5nvyIKOh6H2ipUnI06Sf73kwfOTlbgHl8pFUyc=
+github.com/roadrunner-server/api/v2 v2.11.0/go.mod h1:blZLz1OKMgSapLZHLiycqHMzESQLSLDGerBEGjUix3Y=
 github.com/roadrunner-server/endure v1.2.1 h1:LwapekBTGlsgEXR6Fbp50WYIjAGq/FwTssZThemyawE=
 github.com/roadrunner-server/endure v1.2.1/go.mod h1:36kWruojFlPhtsP/is8wVtWGYuGGxUWDVnn1TTBbbas=
 github.com/roadrunner-server/errors v1.1.0/go.mod h1:MzHjhRZIZc1ooMyYllUhNs0aTqRUbwcgUSO0TN7kCII=
@@ -220,7 +222,6 @@ go.uber.org/atomic v1.9.0/go.mod h1:fEN4uk6kAWBTFdckzkM89CLk9XfWZrxpCo0nPH17wJc=
 go.uber.org/goleak v1.1.11 h1:wy28qYRKZgnJTxGxvye5/wgWr1EKjmUDGYox5mGlRlI=
 go.uber.org/goleak v1.1.11/go.mod h1:cwTWslyiVhfpKIDGSZEM2HlOvcqm+tG4zioyIeLoqMQ=
 go.uber.org/multierr v1.6.0/go.mod h1:cdWPpRnG4AhwMwsgIHip0KRBQjJy5kYEpYjJxpXp9iU=
-go.uber.org/multierr v1.7.0 h1:zaiO/rmgFjbmCXdSYJWQcdvOCsthmdaHfr3Gm2Kx4Ec=
 go.uber.org/multierr v1.7.0/go.mod h1:7EAYxJLBy9rStEaz58O2t4Uvip6FSURkq8/ppBp95ak=
 go.uber.org/multierr v1.8.0 h1:dg6GjLku4EH+249NNmoIciG9N/jURbDG+pFlTkhzIC8=
 go.uber.org/multierr v1.8.0/go.mod h1:7EAYxJLBy9rStEaz58O2t4Uvip6FSURkq8/ppBp95ak=
