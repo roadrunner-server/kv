@@ -1,2 +1,1 @@
-# kv
-RRv2 KV (key-value) plugin
+# Docs: [link](https://roadrunner.dev/docs/plugins-kv/2.x/en)
