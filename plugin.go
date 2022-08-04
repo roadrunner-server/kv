@@ -64,10 +64,10 @@ func (p *Plugin) Serve() chan error {
 		}
 
 		// check type of the v
-		// should be a map[string]interface{}
+		// should be a map[string]any
 		switch t := v.(type) {
 		// correct type
-		case map[string]interface{}:
+		case map[string]any:
 			if _, ok := t[driver]; !ok {
 				errCh <- errors.E(op, errors.Errorf("could not find mandatory driver field in the %s storage", k))
 				return errCh
@@ -80,7 +80,7 @@ func (p *Plugin) Serve() chan error {
 		// config key for the particular sub-driver kv.memcached.config
 		configKey := fmt.Sprintf("%s.%s.%s", PluginName, k, cfg)
 		// at this point we know, that driver field present in the configuration
-		drName := v.(map[string]interface{})[driver]
+		drName := v.(map[string]any)[driver]
 
 		// driver name should be a string
 		if drStr, ok := drName.(string); ok {
@@ -145,8 +145,8 @@ func (p *Plugin) Stop() error {
 }
 
 // Collects will get all plugins which implement Storage interface
-func (p *Plugin) Collects() []interface{} {
-	return []interface{}{
+func (p *Plugin) Collects() []any {
+	return []any{
 		p.GetAllStorageDrivers,
 	}
 }
@@ -161,6 +161,6 @@ func (p *Plugin) GetAllStorageDrivers(name endure.Named, constructor kv.Construc
 }
 
 // RPC returns associated rpc service.
-func (p *Plugin) RPC() interface{} {
+func (p *Plugin) RPC() any {
 	return &rpc{srv: p, storages: p.storages}
 }
