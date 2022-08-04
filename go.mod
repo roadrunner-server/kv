@@ -3,7 +3,7 @@ module github.com/roadrunner-server/kv/v2
 go 1.19
 
 require (
-	github.com/roadrunner-server/api/v2 v2.20.0
+	github.com/roadrunner-server/api/v2 v2.20.1
 	github.com/roadrunner-server/endure v1.4.0
 	github.com/roadrunner-server/errors v1.1.2
 	go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.11
