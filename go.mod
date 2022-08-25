@@ -3,8 +3,8 @@ module github.com/roadrunner-server/kv/v2
 go 1.19
 
 require (
-	github.com/roadrunner-server/api/v2 v2.21.1
-	github.com/roadrunner-server/endure v1.4.4
+	github.com/roadrunner-server/api/v2 v2.21.2
+	github.com/roadrunner-server/endure v1.4.5
 	github.com/roadrunner-server/errors v1.2.0
 	go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.12
 	go.uber.org/zap v1.23.0
