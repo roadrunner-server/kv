@@ -3,10 +3,9 @@ package kv
 import (
 	"fmt"
 
-	"github.com/roadrunner-server/api/v2/plugins/config"
-	"github.com/roadrunner-server/api/v2/plugins/kv"
 	endure "github.com/roadrunner-server/endure/pkg/container"
 	"github.com/roadrunner-server/errors"
+	"github.com/roadrunner-server/sdk/v3/plugins/kv"
 	"go.uber.org/zap"
 )
 
@@ -19,6 +18,13 @@ const (
 	cfg string = "config"
 )
 
+type Configurer interface {
+	// UnmarshalKey takes a single key and unmarshal it into a Struct.
+	UnmarshalKey(name string, out any) error
+	// Has checks if config section exists.
+	Has(name string) bool
+}
+
 // Plugin for the unified storage
 type Plugin struct {
 	log *zap.Logger
@@ -28,10 +34,10 @@ type Plugin struct {
 	storages map[string]kv.Storage
 	// KV configuration
 	cfg       Config
-	cfgPlugin config.Configurer
+	cfgPlugin Configurer
 }
 
-func (p *Plugin) Init(cfg config.Configurer, log *zap.Logger) error {
+func (p *Plugin) Init(cfg Configurer, log *zap.Logger) error {
 	const op = errors.Op("kv_plugin_init")
 	if !cfg.Has(PluginName) {
 		return errors.E(errors.Disabled)
