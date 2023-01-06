@@ -1,8 +1,8 @@
 package kv
 
 import (
+	"github.com/roadrunner-server/api/v3/plugins/v1/kv"
 	"github.com/roadrunner-server/errors"
-	"github.com/roadrunner-server/sdk/v3/plugins/kv"
 	kvv1 "go.buf.build/protocolbuffers/go/roadrunner-server/api/kv/v1"
 )
 
@@ -53,9 +53,12 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 	const op = errors.Op("rpc_set")
 
 	if st, exists := r.storages[in.GetStorage()]; exists {
-		err := st.Set(in.GetItems()...)
-		if err != nil {
-			return errors.E(op, err)
+		items := in.GetItems()
+		for i := 0; i < len(items); i++ {
+			err := st.Set(from(items[i]))
+			if err != nil {
+				return errors.E(op, err)
+			}
 		}
 
 		// save the result
@@ -99,9 +102,12 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 	const op = errors.Op("rpc_mexpire")
 
 	if st, exists := r.storages[in.GetStorage()]; exists {
-		err := st.MExpire(in.GetItems()...)
-		if err != nil {
-			return errors.E(op, err)
+		items := in.GetItems()
+		for i := 0; i < len(items); i++ {
+			err := st.MExpire(from(items[i]))
+			if err != nil {
+				return errors.E(op, err)
+			}
 		}
 
 		return nil
@@ -174,4 +180,12 @@ func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
 	}
 
 	return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+}
+
+func from(tr *kvv1.Item) *Item {
+	return &Item{
+		key:     tr.GetKey(),
+		val:     tr.GetValue(),
+		timeout: tr.GetTimeout(),
+	}
 }

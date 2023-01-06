@@ -1,11 +1,12 @@
 package kv
 
 import (
+	"context"
 	"fmt"
 
-	endure "github.com/roadrunner-server/endure/pkg/container"
+	"github.com/roadrunner-server/api/v3/plugins/v1/kv"
+	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
-	"github.com/roadrunner-server/sdk/v3/plugins/kv"
 	"go.uber.org/zap"
 )
 
@@ -25,6 +26,10 @@ type Configurer interface {
 	Has(name string) bool
 }
 
+type Logger interface {
+	NamedLogger(name string) *zap.Logger
+}
+
 // Plugin for the unified storage
 type Plugin struct {
 	log *zap.Logger
@@ -37,7 +42,7 @@ type Plugin struct {
 	cfgPlugin Configurer
 }
 
-func (p *Plugin) Init(cfg Configurer, log *zap.Logger) error {
+func (p *Plugin) Init(cfg Configurer, log Logger) error {
 	const op = errors.Op("kv_plugin_init")
 	if !cfg.Has(PluginName) {
 		return errors.E(errors.Disabled)
@@ -48,9 +53,11 @@ func (p *Plugin) Init(cfg Configurer, log *zap.Logger) error {
 		return errors.E(op, err)
 	}
 	p.constructors = make(map[string]kv.Constructor, 5)
+
 	p.storages = make(map[string]kv.Storage, 5)
-	p.log = new(zap.Logger)
-	*p.log = *log
+
+	p.log = log.NamedLogger(PluginName)
+
 	p.cfgPlugin = cfg
 	return nil
 }
@@ -133,37 +140,45 @@ func (p *Plugin) Serve() chan error {
 	return errCh
 }
 
-func (p *Plugin) Stop() error {
-	// stop all attached storages
-	for k := range p.storages {
-		p.storages[k].Stop()
-	}
+func (p *Plugin) Stop(ctx context.Context) error {
+	stopCh := make(chan struct{}, 1)
 
-	for k := range p.storages {
-		delete(p.storages, k)
-	}
+	go func() {
+		// stop all attached storages
+		for k := range p.storages {
+			p.storages[k].Stop()
+		}
 
-	for k := range p.constructors {
-		delete(p.constructors, k)
-	}
+		for k := range p.storages {
+			delete(p.storages, k)
+		}
 
-	return nil
+		for k := range p.constructors {
+			delete(p.constructors, k)
+		}
+		stopCh <- struct{}{}
+	}()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-stopCh:
+		return nil
+	}
 }
 
 // Collects will get all plugins which implement Storage interface
-func (p *Plugin) Collects() []any {
-	return []any{
-		p.GetAllStorageDrivers,
+func (p *Plugin) Collects() []*dep.In {
+	return []*dep.In{
+		dep.Fits(func(pp any) {
+			kvk := pp.(kv.Constructor)
+			p.constructors[kvk.Name()] = kvk
+		}, (*kv.Constructor)(nil)),
 	}
 }
 
 func (p *Plugin) Name() string {
 	return PluginName
-}
-
-func (p *Plugin) GetAllStorageDrivers(name endure.Named, constructor kv.Constructor) {
-	// save the storage constructor
-	p.constructors[name.Name()] = constructor
 }
 
 // RPC returns associated rpc service.
