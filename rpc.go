@@ -1,7 +1,7 @@
 package kv
 
 import (
-	"github.com/roadrunner-server/api/v3/plugins/v1/kv"
+	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
 	"github.com/roadrunner-server/errors"
 	kvv1 "go.buf.build/protocolbuffers/go/roadrunner-server/api/kv/v1"
 )
