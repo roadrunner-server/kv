@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/roadrunner-server/api/v4 v4.0.0
-	github.com/roadrunner-server/endure/v2 v2.0.1
+	github.com/roadrunner-server/endure/v2 v2.1.0
 	github.com/roadrunner-server/errors v1.2.0
 	go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.27
 	go.uber.org/zap v1.24.0
