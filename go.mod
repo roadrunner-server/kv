@@ -3,7 +3,7 @@ module github.com/roadrunner-server/kv/v4
 go 1.20
 
 require (
-	github.com/roadrunner-server/api/v4 v4.1.0
+	github.com/roadrunner-server/api/v4 v4.2.0
 	github.com/roadrunner-server/endure/v2 v2.2.0
 	github.com/roadrunner-server/errors v1.2.0
 	go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.31
@@ -13,6 +13,6 @@ require (
 require (
 	github.com/pkg/errors v0.9.1 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.9.0 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	google.golang.org/protobuf v1.29.0 // indirect
 )
