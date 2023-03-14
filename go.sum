@@ -13,8 +13,6 @@ github.com/roadrunner-server/endure/v2 v2.2.0/go.mod h1:igEYk0KVxCxfbcMhV/mffDDY
 github.com/roadrunner-server/errors v1.2.0 h1:qBmNXt8Iex9QnYTjCkbJKsBZu2EtYkQCM06GUDcQBbI=
 github.com/roadrunner-server/errors v1.2.0/go.mod h1:z0ECxZp/dDa5RahtMcy4mBIavVxiZ9vwE5kByl7kFtY=
 github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
-go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.31 h1:uSIsJkWneeKWN8MhRhWnVYt38e9fWJyGiF32GJWNlvc=
-go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.31/go.mod h1:CfIAvR+W2N+Y0WXMzwT80Eh83CmBPWplgFQDA5HftC4=
 go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.32 h1:pqq8kUBAoD8l0Q8R9qef+brFtQWRMx8DwwsStktsaOc=
 go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.32/go.mod h1:CfIAvR+W2N+Y0WXMzwT80Eh83CmBPWplgFQDA5HftC4=
 go.uber.org/atomic v1.10.0 h1:9qC72Qh0+3MqyJbAn8YU5xVq1frD8bn3JtD2oXtafVQ=
@@ -28,6 +26,6 @@ golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IV
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
 google.golang.org/protobuf v1.28.1/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
-google.golang.org/protobuf v1.29.0 h1:44S3JjaKmLEE4YIkjzexaP+NzZsudE3Zin5Njn/pYX0=
-google.golang.org/protobuf v1.29.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
+google.golang.org/protobuf v1.29.1 h1:7QBf+IK2gx70Ap/hDsOmam3GE0v9HicjfEdAxE62UoM=
+google.golang.org/protobuf v1.29.1/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
