@@ -140,6 +140,10 @@ func (p *Plugin) Serve() chan error {
 	return errCh
 }
 
+func (p *Plugin) Weight() uint {
+	return 10
+}
+
 func (p *Plugin) Stop(ctx context.Context) error {
 	stopCh := make(chan struct{}, 1)
 
