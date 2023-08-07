@@ -68,7 +68,7 @@ func (p *Plugin) Serve() chan error {
 	// key - storage name in the config
 	// value - storage
 	// For this config we should have 3 constructors: memory, boltdb and memcached but 4 KVs: default, boltdb-south, boltdb-north and memcached
-	// when user requests for example boltdb-south, we should provide that particular preconfigured storage
+	// when user requests for example boltdb-south, we should provide that particular pre-configured storage
 
 	for k, v := range p.cfg.Data {
 		// for example if the key not properly formatted (yaml)
