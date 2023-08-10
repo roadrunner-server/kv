@@ -1,18 +1,16 @@
 module github.com/roadrunner-server/kv/v4
 
-go 1.20
+go 1.21
 
 require (
-	github.com/roadrunner-server/api/v4 v4.5.0
-	github.com/roadrunner-server/endure/v2 v2.2.1
-	github.com/roadrunner-server/errors v1.2.0
-	go.buf.build/protocolbuffers/go/roadrunner-server/api v1.3.40
-	go.uber.org/zap v1.24.0
+	buf.build/gen/go/roadrunner-server/api/protocolbuffers/go v1.31.0-20230627200035-4e59a69f79a2.1
+	github.com/roadrunner-server/api/v4 v4.6.2
+	github.com/roadrunner-server/endure/v2 v2.4.1
+	github.com/roadrunner-server/errors v1.3.0
+	go.uber.org/zap v1.25.0
 )
 
 require (
-	github.com/pkg/errors v0.9.1 // indirect
-	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
