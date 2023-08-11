@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["boltdb", "Configurer", "dupl", "mexpire", "mget", "nolint"]
+  "cSpell.words": [
+    "boltdb",
+    "Configurer",
+    "dupl",
+    "mapstructure",
+    "mexpire",
+    "mget",
+    "nolint"
+  ]
 }
