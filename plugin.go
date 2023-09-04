@@ -7,6 +7,7 @@ import (
 	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
 	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.uber.org/zap"
 )
 
@@ -26,6 +27,11 @@ type Configurer interface {
 	Has(name string) bool
 }
 
+// Tracer represents opentelemetry tracer (OTEL plugin)
+type Tracer interface {
+	Tracer() *sdktrace.TracerProvider
+}
+
 type Logger interface {
 	NamedLogger(name string) *zap.Logger
 }
@@ -37,6 +43,8 @@ type Plugin struct {
 	constructors map[string]kv.Constructor
 	// storages contains user-defined storages, such as boltdb-north, memcached-us and so on.
 	storages map[string]kv.Storage
+	// OTEL tracer
+	tracer *sdktrace.TracerProvider
 	// KV configuration
 	cfg       Config
 	cfgPlugin Configurer
@@ -65,6 +73,12 @@ func (p *Plugin) Init(cfg Configurer, log Logger) error {
 func (p *Plugin) Serve() chan error {
 	errCh := make(chan error, 1)
 	const op = errors.Op("kv_plugin_serve")
+
+	if p.tracer == nil {
+		// NOOP tracer
+		p.tracer = sdktrace.NewTracerProvider()
+	}
+
 	// key - storage name in the config
 	// value - storage
 	// For this config we should have 3 constructors: memory, boltdb and memcached but 4 KVs: default, boltdb-south, boltdb-north and memcached
@@ -178,6 +192,9 @@ func (p *Plugin) Collects() []*dep.In {
 			kvk := pp.(kv.Constructor)
 			p.constructors[kvk.Name()] = kvk
 		}, (*kv.Constructor)(nil)),
+		dep.Fits(func(pp any) {
+			p.tracer = pp.(Tracer).Tracer()
+		}, (*Tracer)(nil)),
 	}
 }
 
@@ -187,5 +204,8 @@ func (p *Plugin) Name() string {
 
 // RPC returns associated rpc service.
 func (p *Plugin) RPC() any {
-	return &rpc{srv: p, storages: p.storages}
+	return &rpc{
+		storages: p.storages,
+		tracer:   p.tracer,
+	}
 }
