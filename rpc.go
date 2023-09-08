@@ -62,7 +62,7 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 	return nil
 }
 
-// Set accept proto payload with Storage and Item
+// Set accepts proto payload with Storage and Item
 func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 	const op = errors.Op("rpc_set")
 
@@ -74,16 +74,12 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
 	}
 
-	items := in.GetItems()
-	for i := 0; i < len(items); i++ {
-		err := r.storages[in.GetStorage()].Set(from(items[i]))
-		if err != nil {
-			span.RecordError(err)
-			return errors.E(op, err)
-		}
+	err := r.storages[in.GetStorage()].Set(from(in.GetItems())...)
+	if err != nil {
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	// save the result
 	return nil
 }
 
@@ -144,13 +140,10 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
 	}
 
-	items := in.GetItems()
-	for i := 0; i < len(items); i++ {
-		err := r.storages[in.GetStorage()].MExpire(from(items[i]))
-		if err != nil {
-			span.RecordError(err)
-			return errors.E(op, err)
-		}
+	err := r.storages[in.GetStorage()].MExpire(from(in.GetItems())...)
+	if err != nil {
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
 	return nil
@@ -254,10 +247,15 @@ func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
 	return nil
 }
 
-func from(tr *kvv1.Item) *Item {
-	return &Item{
-		key:     tr.GetKey(),
-		val:     tr.GetValue(),
-		timeout: tr.GetTimeout(),
+func from(tr []*kvv1.Item) []kv.Item {
+	items := make([]kv.Item, 0, len(tr))
+	for i := range tr {
+		items = append(items, &Item{
+			key:     tr[i].GetKey(),
+			val:     tr[i].GetValue(),
+			timeout: tr[i].GetTimeout(),
+		})
 	}
+
+	return items
 }
