@@ -61,10 +61,10 @@ func (p *Plugin) Init(cfg Configurer, log Logger) error {
 		return errors.E(op, err)
 	}
 	p.constructors = make(map[string]kv.Constructor, 5)
-
 	p.storages = make(map[string]kv.Storage, 5)
-
 	p.log = log.NamedLogger(PluginName)
+	// NOOP tracer
+	p.tracer = sdktrace.NewTracerProvider()
 
 	p.cfgPlugin = cfg
 	return nil
@@ -73,11 +73,6 @@ func (p *Plugin) Init(cfg Configurer, log Logger) error {
 func (p *Plugin) Serve() chan error {
 	errCh := make(chan error, 1)
 	const op = errors.Op("kv_plugin_serve")
-
-	if p.tracer == nil {
-		// NOOP tracer
-		p.tracer = sdktrace.NewTracerProvider()
-	}
 
 	// key - storage name in the config
 	// value - storage
