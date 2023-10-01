@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  memcached:
+    image: memcached:latest
+    container_name: memcached_1
+    ports:
+      - "127.0.0.1:11211:11211"
