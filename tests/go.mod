@@ -6,15 +6,15 @@ toolchain go1.21.1
 
 require (
 	github.com/roadrunner-server/api/v4 v4.9.0
-	github.com/roadrunner-server/boltdb/v4 v4.7.3
-	github.com/roadrunner-server/config/v4 v4.4.6
+	github.com/roadrunner-server/boltdb/v4 v4.7.4
+	github.com/roadrunner-server/config/v4 v4.4.7
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
-	github.com/roadrunner-server/kv/v4 v4.4.4
-	github.com/roadrunner-server/logger/v4 v4.2.4
-	github.com/roadrunner-server/memcached/v4 v4.3.3
-	github.com/roadrunner-server/redis/v4 v4.2.5
-	github.com/roadrunner-server/rpc/v4 v4.2.5
+	github.com/roadrunner-server/kv/v4 v4.4.5
+	github.com/roadrunner-server/logger/v4 v4.2.5
+	github.com/roadrunner-server/memcached/v4 v4.3.4
+	github.com/roadrunner-server/redis/v4 v4.2.6
+	github.com/roadrunner-server/rpc/v4 v4.2.6
 	github.com/stretchr/testify v1.8.4
 )
 
@@ -40,7 +40,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -48,7 +48,7 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/v9 v9.2.1 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.6.4
+	github.com/roadrunner-server/memory/v4 v4.6.5
 	github.com/roadrunner-server/sdk/v4 v4.5.2 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
