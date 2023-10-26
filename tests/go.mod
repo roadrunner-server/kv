@@ -49,7 +49,7 @@ require (
 	github.com/redis/go-redis/v9 v9.2.1 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
 	github.com/roadrunner-server/memory/v4 v4.6.6
-	github.com/roadrunner-server/sdk/v4 v4.5.2 // indirect
+	github.com/roadrunner-server/sdk/v4 v4.5.3 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
