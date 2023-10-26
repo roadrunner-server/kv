@@ -56,7 +56,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.17.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.4.0 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.etcd.io/bbolt v1.3.7 // indirect
 	go.opentelemetry.io/contrib/instrumentation/github.com/bradfitz/gomemcache/memcache/otelmemcache v0.43.0 // indirect
