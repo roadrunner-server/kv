@@ -6,15 +6,15 @@ toolchain go1.21.1
 
 require (
 	github.com/roadrunner-server/api/v4 v4.9.0
-	github.com/roadrunner-server/boltdb/v4 v4.7.5
-	github.com/roadrunner-server/config/v4 v4.4.8
+	github.com/roadrunner-server/boltdb/v4 v4.7.6
+	github.com/roadrunner-server/config/v4 v4.4.9
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
-	github.com/roadrunner-server/kv/v4 v4.4.6
-	github.com/roadrunner-server/logger/v4 v4.2.6
-	github.com/roadrunner-server/memcached/v4 v4.3.5
-	github.com/roadrunner-server/redis/v4 v4.2.7
-	github.com/roadrunner-server/rpc/v4 v4.2.7
+	github.com/roadrunner-server/kv/v4 v4.4.7
+	github.com/roadrunner-server/logger/v4 v4.2.7
+	github.com/roadrunner-server/memcached/v4 v4.3.6
+	github.com/roadrunner-server/redis/v4 v4.2.8
+	github.com/roadrunner-server/rpc/v4 v4.2.8
 	github.com/stretchr/testify v1.8.4
 )
 
@@ -34,7 +34,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -48,7 +48,7 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/v9 v9.2.1 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.6.6
+	github.com/roadrunner-server/memory/v4 v4.6.7
 	github.com/roadrunner-server/sdk/v4 v4.5.3 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
@@ -58,7 +58,7 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	go.etcd.io/bbolt v1.3.7 // indirect
+	go.etcd.io/bbolt v1.3.8 // indirect
 	go.opentelemetry.io/contrib/instrumentation/github.com/bradfitz/gomemcache/memcache/otelmemcache v0.43.0 // indirect
 	go.opentelemetry.io/contrib/propagators/jaeger v1.20.0 // indirect
 	go.opentelemetry.io/otel v1.19.0 // indirect
