@@ -7,7 +7,7 @@ toolchain go1.21.1
 require (
 	github.com/roadrunner-server/api/v4 v4.9.0
 	github.com/roadrunner-server/boltdb/v4 v4.7.6
-	github.com/roadrunner-server/config/v4 v4.4.9
+	github.com/roadrunner-server/config/v4 v4.5.0
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
 	github.com/roadrunner-server/kv/v4 v4.4.7
@@ -46,7 +46,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
-	github.com/redis/go-redis/v9 v9.2.1 // indirect
+	github.com/redis/go-redis/v9 v9.3.0 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
 	github.com/roadrunner-server/memory/v4 v4.6.7
 	github.com/roadrunner-server/sdk/v4 v4.5.3 // indirect
