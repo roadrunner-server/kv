@@ -6,19 +6,20 @@ toolchain go1.21.1
 
 require (
 	github.com/roadrunner-server/api/v4 v4.9.0
-	github.com/roadrunner-server/boltdb/v4 v4.7.7
-	github.com/roadrunner-server/config/v4 v4.6.1
+	github.com/roadrunner-server/boltdb/v4 v4.7.8
+	github.com/roadrunner-server/config/v4 v4.6.2
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
-	github.com/roadrunner-server/kv/v4 v4.4.8
-	github.com/roadrunner-server/logger/v4 v4.2.8
-	github.com/roadrunner-server/memcached/v4 v4.3.7
-	github.com/roadrunner-server/redis/v4 v4.2.9
-	github.com/roadrunner-server/rpc/v4 v4.2.9
+	github.com/roadrunner-server/kv/v4 v4.4.9
+	github.com/roadrunner-server/logger/v4 v4.2.9
+	github.com/roadrunner-server/memcached/v4 v4.3.8
+	github.com/roadrunner-server/redis/v4 v4.2.10
+	github.com/roadrunner-server/rpc/v4 v4.2.10
 	github.com/stretchr/testify v1.8.4
 )
 
 require (
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/sagikazarmark/locafero v0.3.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
@@ -48,7 +49,7 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/v9 v9.3.0 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.6.8
+	github.com/roadrunner-server/memory/v4 v4.6.9
 	github.com/roadrunner-server/sdk/v4 v4.5.3 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
@@ -60,11 +61,11 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	go.opentelemetry.io/contrib/instrumentation/github.com/bradfitz/gomemcache/memcache/otelmemcache v0.43.0 // indirect
-	go.opentelemetry.io/contrib/propagators/jaeger v1.21.0 // indirect
-	go.opentelemetry.io/otel v1.20.0 // indirect
-	go.opentelemetry.io/otel/metric v1.20.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.20.0 // indirect
-	go.opentelemetry.io/otel/trace v1.20.0 // indirect
+	go.opentelemetry.io/contrib/propagators/jaeger v1.21.1 // indirect
+	go.opentelemetry.io/otel v1.21.0 // indirect
+	go.opentelemetry.io/otel/metric v1.21.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
+	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
