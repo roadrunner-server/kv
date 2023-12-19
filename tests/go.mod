@@ -6,15 +6,15 @@ toolchain go1.21.5
 
 require (
 	github.com/roadrunner-server/api/v4 v4.10.0
-	github.com/roadrunner-server/boltdb/v4 v4.7.9
-	github.com/roadrunner-server/config/v4 v4.6.3
+	github.com/roadrunner-server/boltdb/v4 v4.7.10
+	github.com/roadrunner-server/config/v4 v4.6.4
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
-	github.com/roadrunner-server/kv/v4 v4.4.10
-	github.com/roadrunner-server/logger/v4 v4.2.10
-	github.com/roadrunner-server/memcached/v4 v4.3.9
-	github.com/roadrunner-server/redis/v4 v4.2.11
-	github.com/roadrunner-server/rpc/v4 v4.2.11
+	github.com/roadrunner-server/kv/v4 v4.4.11
+	github.com/roadrunner-server/logger/v4 v4.2.11
+	github.com/roadrunner-server/memcached/v4 v4.3.10
+	github.com/roadrunner-server/redis/v4 v4.2.12
+	github.com/roadrunner-server/rpc/v4 v4.2.12
 	github.com/stretchr/testify v1.8.4
 )
 
@@ -23,7 +23,7 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
+	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611 // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
@@ -47,15 +47,15 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
-	github.com/redis/go-redis/v9 v9.3.0 // indirect
+	github.com/redis/go-redis/v9 v9.3.1 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.6.10
+	github.com/roadrunner-server/memory/v4 v4.6.11
 	github.com/roadrunner-server/sdk/v4 v4.5.4 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.18.1 // indirect
+	github.com/spf13/viper v1.18.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
