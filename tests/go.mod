@@ -6,15 +6,15 @@ toolchain go1.22rc1
 
 require (
 	github.com/roadrunner-server/api/v4 v4.10.0
-	github.com/roadrunner-server/boltdb/v4 v4.7.10
-	github.com/roadrunner-server/config/v4 v4.6.4
+	github.com/roadrunner-server/boltdb/v4 v4.7.11
+	github.com/roadrunner-server/config/v4 v4.6.5
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/goridge/v3 v3.8.1
-	github.com/roadrunner-server/kv/v4 v4.4.11
-	github.com/roadrunner-server/logger/v4 v4.2.11
-	github.com/roadrunner-server/memcached/v4 v4.3.10
-	github.com/roadrunner-server/redis/v4 v4.2.13
-	github.com/roadrunner-server/rpc/v4 v4.2.12
+	github.com/roadrunner-server/kv/v4 v4.4.12
+	github.com/roadrunner-server/logger/v4 v4.2.12
+	github.com/roadrunner-server/memcached/v4 v4.3.11
+	github.com/roadrunner-server/redis/v4 v4.2.14
+	github.com/roadrunner-server/rpc/v4 v4.2.13
 	github.com/stretchr/testify v1.8.4
 )
 
@@ -23,7 +23,7 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
+	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
@@ -49,8 +49,8 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/v9 v9.3.1 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.6.11
-	github.com/roadrunner-server/sdk/v4 v4.5.4 // indirect
+	github.com/roadrunner-server/memory/v4 v4.6.12
+	github.com/roadrunner-server/sdk/v4 v4.5.5 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
@@ -68,8 +68,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
-	golang.org/x/sync v0.5.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sync v0.6.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
