@@ -47,10 +47,10 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
-	github.com/redis/go-redis/v9 v9.3.1 // indirect
+	github.com/redis/go-redis/v9 v9.4.0 // indirect
 	github.com/roadrunner-server/errors v1.3.0 // indirect
 	github.com/roadrunner-server/memory/v4 v4.6.12
-	github.com/roadrunner-server/sdk/v4 v4.5.5 // indirect
+	github.com/roadrunner-server/sdk/v4 v4.5.6 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect

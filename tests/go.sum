@@ -56,8 +56,8 @@ github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5/go.mod h1:fyalQWdtzDBECAQFBJu
 github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 h1:EfpWLLCyXw8PSM2/XNJLjI3Pb27yVE+gIAfeqp8LUCc=
 github.com/redis/go-redis/extra/redisotel/v9 v9.0.5/go.mod h1:WZjPDy7VNzn77AAfnAfVjZNvfJTYfPetfZk5yoSTLaQ=
 github.com/redis/go-redis/v9 v9.0.5/go.mod h1:WqMKv5vnQbRuZstUwxQI195wHy+t4PuXDOjzMvcuQHk=
-github.com/redis/go-redis/v9 v9.3.1 h1:KqdY8U+3X6z+iACvumCNxnoluToB+9Me+TvyFa21Mds=
-github.com/redis/go-redis/v9 v9.3.1/go.mod h1:hdY0cQFCN4fnSYT6TkisLufl/4W5UIXyv0b/CLO2V2M=
+github.com/redis/go-redis/v9 v9.4.0 h1:Yzoz33UZw9I/mFhx4MNrB6Fk+XHO1VukNcCa1+lwyKk=
+github.com/redis/go-redis/v9 v9.4.0/go.mod h1:hdY0cQFCN4fnSYT6TkisLufl/4W5UIXyv0b/CLO2V2M=
 github.com/roadrunner-server/api/v4 v4.10.0 h1:tF6vmA6MaQyOL/GQQc+nyj356oX3UoQBd+SXNtsu+bU=
 github.com/roadrunner-server/api/v4 v4.10.0/go.mod h1:ou9QviOd5dxl3to1+BV4iZ3lnMLxuE/HqESNW5PDnw0=
 github.com/roadrunner-server/boltdb/v4 v4.7.11 h1:cheY7I2cbNvUb0zchqi9+g5np2fcCn+4kX39EvMxd0g=
@@ -80,8 +80,8 @@ github.com/roadrunner-server/redis/v4 v4.2.14 h1:bYoQfAy5yiLDv88BsjPgoH0d0GrdmMq
 github.com/roadrunner-server/redis/v4 v4.2.14/go.mod h1:06FifeSPScZD7IraXzuc4HXjTShew1hfH0j3uVgPw7M=
 github.com/roadrunner-server/rpc/v4 v4.2.13 h1:/x5fgnNE1Q2evBkTgtJFg4sFDokrMSFqHoBi+XLcUoc=
 github.com/roadrunner-server/rpc/v4 v4.2.13/go.mod h1:Qwso+CQ0wWmMtWQpa5VczBiFSV+zaCmTLI9cuJ5I26M=
-github.com/roadrunner-server/sdk/v4 v4.5.5 h1:YNPV9yCG1tHQRN4vXs9V1xY9e+CQSbwNncrcFy7FWsA=
-github.com/roadrunner-server/sdk/v4 v4.5.5/go.mod h1:M21tpBfCk3NEH2ixa/Fs80d7KGPVP9zwLrZhc/goi1Y=
+github.com/roadrunner-server/sdk/v4 v4.5.6 h1:vfEYV0bHf/6Wi4qwLlNiwj5O239xpPKIc7Ho2kIcb3Q=
+github.com/roadrunner-server/sdk/v4 v4.5.6/go.mod h1:M21tpBfCk3NEH2ixa/Fs80d7KGPVP9zwLrZhc/goi1Y=
 github.com/roadrunner-server/tcplisten v1.4.0 h1:yWo09zktv/CSV6VywLfw4pwNcUchgTiIrW4uIICtO5M=
 github.com/roadrunner-server/tcplisten v1.4.0/go.mod h1:A6+VSnW2ETGnN/e/CMdP63ZXqQDaC0UDMU6QmyuB0yM=
 github.com/rogpeppe/go-internal v1.11.0 h1:cWPaGQEPrBb5/AsnsZesgZZ9yb1OQ+GOISoDNXVBh4M=
