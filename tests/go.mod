@@ -62,10 +62,10 @@ require (
 	go.etcd.io/bbolt v1.3.8 // indirect
 	go.opentelemetry.io/contrib/instrumentation/github.com/bradfitz/gomemcache/memcache/otelmemcache v0.43.0 // indirect
 	go.opentelemetry.io/contrib/propagators/jaeger v1.21.1 // indirect
-	go.opentelemetry.io/otel v1.21.0 // indirect
-	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
-	go.opentelemetry.io/otel/trace v1.21.0 // indirect
+	go.opentelemetry.io/otel v1.22.0 // indirect
+	go.opentelemetry.io/otel/metric v1.22.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.22.0 // indirect
+	go.opentelemetry.io/otel/trace v1.22.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
