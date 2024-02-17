@@ -1,1 +1,1 @@
-# Docs: [link](https://roadrunner.dev/docs/plugins-kv/2.x/en)
+# Docs: [link](https://docs.roadrunner.dev/key-value/overview-kv)
