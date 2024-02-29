@@ -3,7 +3,7 @@ module tests
 go 1.22.0
 
 require (
-	github.com/roadrunner-server/api/v4 v4.11.0
+	github.com/roadrunner-server/api/v4 v4.11.1
 	github.com/roadrunner-server/boltdb/v4 v4.7.14
 	github.com/roadrunner-server/config/v4 v4.6.8
 	github.com/roadrunner-server/endure/v2 v2.4.3
@@ -57,7 +57,7 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	go.etcd.io/bbolt v1.3.8 // indirect
+	go.etcd.io/bbolt v1.3.9 // indirect
 	go.opentelemetry.io/contrib/instrumentation/github.com/bradfitz/gomemcache/memcache/otelmemcache v0.43.0 // indirect
 	go.opentelemetry.io/contrib/propagators/jaeger v1.24.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect

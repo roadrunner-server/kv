@@ -3,7 +3,7 @@ module github.com/roadrunner-server/kv/v4
 go 1.22.0
 
 require (
-	github.com/roadrunner-server/api/v4 v4.11.0
+	github.com/roadrunner-server/api/v4 v4.11.1
 	github.com/roadrunner-server/endure/v2 v2.4.3
 	github.com/roadrunner-server/errors v1.4.0
 	go.opentelemetry.io/otel/sdk v1.24.0
