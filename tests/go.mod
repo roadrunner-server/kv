@@ -1,14 +1,12 @@
 module tests
 
-go 1.22.0
-
-toolchain go1.22.1
+go 1.22.1
 
 require (
-	github.com/roadrunner-server/api/v4 v4.11.1
+	github.com/roadrunner-server/api/v4 v4.12.0
 	github.com/roadrunner-server/boltdb/v4 v4.7.15
 	github.com/roadrunner-server/config/v4 v4.6.9
-	github.com/roadrunner-server/endure/v2 v2.4.3
+	github.com/roadrunner-server/endure/v2 v2.4.4
 	github.com/roadrunner-server/goridge/v3 v3.8.1
 	github.com/roadrunner-server/kv/v4 v4.4.16
 	github.com/roadrunner-server/logger/v4 v4.2.16
@@ -23,7 +21,7 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
+	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
@@ -43,7 +41,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
+	github.com/pelletier/go-toml/v2 v2.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
