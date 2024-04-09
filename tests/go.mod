@@ -1,8 +1,6 @@
 module tests
 
-go 1.22.1
-
-toolchain go1.22.2
+go 1.22.2
 
 require (
 	github.com/roadrunner-server/api/v4 v4.12.0
@@ -23,7 +21,7 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
+	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8 // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
