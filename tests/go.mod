@@ -7,7 +7,7 @@ require (
 	github.com/roadrunner-server/boltdb/v4 v4.7.15
 	github.com/roadrunner-server/config/v4 v4.6.9
 	github.com/roadrunner-server/endure/v2 v2.4.4
-	github.com/roadrunner-server/goridge/v3 v3.8.1
+	github.com/roadrunner-server/goridge/v3 v3.8.2
 	github.com/roadrunner-server/kv/v4 v4.4.16
 	github.com/roadrunner-server/logger/v4 v4.2.16
 	github.com/roadrunner-server/memcached/v4 v4.3.15
