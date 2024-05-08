@@ -1,6 +1,6 @@
 module github.com/roadrunner-server/kv/v4
 
-go 1.22.2
+go 1.22.3
 
 require (
 	github.com/roadrunner-server/api/v4 v4.12.0
