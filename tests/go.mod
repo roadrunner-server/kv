@@ -4,15 +4,15 @@ go 1.22.3
 
 require (
 	github.com/roadrunner-server/api/v4 v4.12.0
-	github.com/roadrunner-server/boltdb/v4 v4.9.1
-	github.com/roadrunner-server/config/v4 v4.8.1
+	github.com/roadrunner-server/boltdb/v4 v4.9.2
+	github.com/roadrunner-server/config/v4 v4.8.2
 	github.com/roadrunner-server/endure/v2 v2.4.4
 	github.com/roadrunner-server/goridge/v3 v3.8.2
 	github.com/roadrunner-server/kv/v4 v4.4.16
-	github.com/roadrunner-server/logger/v4 v4.4.1
-	github.com/roadrunner-server/memcached/v4 v4.5.1
-	github.com/roadrunner-server/redis/v4 v4.4.1
-	github.com/roadrunner-server/rpc/v4 v4.4.1
+	github.com/roadrunner-server/logger/v4 v4.4.2
+	github.com/roadrunner-server/memcached/v4 v4.5.2
+	github.com/roadrunner-server/redis/v4 v4.4.2
+	github.com/roadrunner-server/rpc/v4 v4.4.2
 	github.com/stretchr/testify v1.9.0
 )
 
@@ -47,7 +47,7 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/v9 v9.5.1 // indirect
 	github.com/roadrunner-server/errors v1.4.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.8.1
+	github.com/roadrunner-server/memory/v4 v4.8.2
 	github.com/roadrunner-server/sdk/v4 v4.7.2 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
