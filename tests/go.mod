@@ -21,7 +21,7 @@ require (
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20240529005216-23cca8864a10 // indirect
+	golang.org/x/exp v0.0.0-20240531132922-fd00a4e0eefc // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
@@ -45,7 +45,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
-	github.com/redis/go-redis/v9 v9.5.1 // indirect
+	github.com/redis/go-redis/v9 v9.5.2 // indirect
 	github.com/roadrunner-server/errors v1.4.0 // indirect
 	github.com/roadrunner-server/memory/v4 v4.8.2
 	github.com/roadrunner-server/sdk/v4 v4.7.2 // indirect
