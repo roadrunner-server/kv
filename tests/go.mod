@@ -2,11 +2,13 @@ module tests
 
 go 1.22.3
 
+toolchain go1.22.4
+
 require (
 	github.com/roadrunner-server/api/v4 v4.12.0
 	github.com/roadrunner-server/boltdb/v4 v4.9.2
 	github.com/roadrunner-server/config/v4 v4.9.0
-	github.com/roadrunner-server/endure/v2 v2.4.4
+	github.com/roadrunner-server/endure/v2 v2.4.5
 	github.com/roadrunner-server/goridge/v3 v3.8.2
 	github.com/roadrunner-server/kv/v4 v4.4.16
 	github.com/roadrunner-server/logger/v4 v4.4.2
@@ -18,7 +20,7 @@ require (
 
 require (
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/sagikazarmark/locafero v0.5.0 // indirect
+	github.com/sagikazarmark/locafero v0.6.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20240531132922-fd00a4e0eefc // indirect
@@ -67,8 +69,8 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
