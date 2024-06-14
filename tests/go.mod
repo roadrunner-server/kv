@@ -4,15 +4,15 @@ go 1.22.4
 
 require (
 	github.com/roadrunner-server/api/v4 v4.12.0
-	github.com/roadrunner-server/boltdb/v4 v4.9.3
-	github.com/roadrunner-server/config/v4 v4.9.1
+	github.com/roadrunner-server/boltdb/v4 v4.9.4
+	github.com/roadrunner-server/config/v4 v4.9.2
 	github.com/roadrunner-server/endure/v2 v2.4.5
 	github.com/roadrunner-server/goridge/v3 v3.8.2
 	github.com/roadrunner-server/kv/v4 v4.4.16
-	github.com/roadrunner-server/logger/v4 v4.4.3
-	github.com/roadrunner-server/memcached/v4 v4.5.3
-	github.com/roadrunner-server/redis/v4 v4.4.3
-	github.com/roadrunner-server/rpc/v4 v4.4.3
+	github.com/roadrunner-server/logger/v4 v4.4.4
+	github.com/roadrunner-server/memcached/v4 v4.5.4
+	github.com/roadrunner-server/redis/v4 v4.4.4
+	github.com/roadrunner-server/rpc/v4 v4.4.4
 	github.com/stretchr/testify v1.9.0
 )
 
@@ -21,7 +21,7 @@ require (
 	github.com/sagikazarmark/locafero v0.6.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
 )
 
 replace github.com/roadrunner-server/kv/v4 => ../
@@ -47,7 +47,7 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.5.3 // indirect
 	github.com/redis/go-redis/v9 v9.5.3 // indirect
 	github.com/roadrunner-server/errors v1.4.0 // indirect
-	github.com/roadrunner-server/memory/v4 v4.8.3
+	github.com/roadrunner-server/memory/v4 v4.8.4
 	github.com/roadrunner-server/sdk/v4 v4.7.3 // indirect
 	github.com/roadrunner-server/tcplisten v1.4.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
