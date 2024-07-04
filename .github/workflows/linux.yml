@@ -12,17 +12,16 @@ on:
 
 jobs:
   kv_test:
-    name: KV plugin (Go ${{ matrix.go }}, PHP ${{ matrix.php }}, OS ${{matrix.os}})
+    name: KV plugin (Go ${{ matrix.go }}, OS ${{matrix.os}})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       matrix:
-        php: [ "8.2" ]
         go: [ stable ]
         os: [ "ubuntu-latest" ]
     steps:
       - name: Set up Go ${{ matrix.go }}
-        uses: actions/setup-go@v4 # action page: <https://github.com/actions/setup-go>
+        uses: actions/setup-go@v5 # action page: <https://github.com/actions/setup-go>
         with:
           go-version: ${{ matrix.go }}
 
@@ -70,7 +69,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Download code coverage results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - run: |
           cd coverage
           echo 'mode: atomic' > summary.txt
@@ -78,7 +77,7 @@ jobs:
           sed -i '2,${/roadrunner/!d}' summary.txt
 
       - name: upload to codecov
-        uses: codecov/codecov-action@v3 # Docs: <https://github.com/codecov/codecov-action>
+        uses: codecov/codecov-action@v4 # Docs: <https://github.com/codecov/codecov-action>
         with:
           file: ./coverage/summary.txt
           fail_ci_if_error: false
