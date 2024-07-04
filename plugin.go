@@ -14,7 +14,7 @@ import (
 const (
 	// PluginName linked to the memory, boltdb, memcached, redis plugins. DO NOT change w/o sync.
 	PluginName string = "kv"
-	// driver is the mandatory field which should present in every storage
+	// driver is the mandatory field that should present in every storage
 	driver string = "driver"
 	// config key used to detect local configuration for the driver
 	cfg string = "config"
@@ -23,7 +23,7 @@ const (
 type Configurer interface {
 	// UnmarshalKey takes a single key and unmarshal it into a Struct.
 	UnmarshalKey(name string, out any) error
-	// Has checks if config section exists.
+	// Has checks if a config section exists.
 	Has(name string) bool
 }
 
@@ -36,12 +36,12 @@ type Logger interface {
 	NamedLogger(name string) *zap.Logger
 }
 
-// Plugin for the unified storage
+// Plugin for unified storage
 type Plugin struct {
 	log *zap.Logger
-	// constructors contains general storage constructors, such as boltdb, memory, memcached, redis.
+	// constructors contain general storage constructors, such as boltdb, memory, memcached, redis.
 	constructors map[string]kv.Constructor
-	// storages contains user-defined storages, such as boltdb-north, memcached-us and so on.
+	// storages contain user-defined storages, such as boltdb-north, memcached-us and so on.
 	storages map[string]kv.Storage
 	// OTEL tracer
 	tracer *sdktrace.TracerProvider
@@ -77,10 +77,10 @@ func (p *Plugin) Serve() chan error {
 	// key - storage name in the config
 	// value - storage
 	// For this config we should have 3 constructors: memory, boltdb and memcached but 4 KVs: default, boltdb-south, boltdb-north and memcached
-	// when user requests for example boltdb-south, we should provide that particular pre-configured storage
+	// when user requests, for example, boltdb-south, we should provide that particular pre-configured storage
 
 	for k, v := range p.cfg.Data {
-		// for example if the key not properly formatted (yaml)
+		// for example, if the key didn't properly format (yaml)
 		if v == nil {
 			continue
 		}
@@ -129,7 +129,7 @@ func (p *Plugin) Serve() chan error {
 					continue
 				}
 
-				// use only key for the driver registration, for example rr-boltdb should be globally available
+				// use only key for the driver registration, for example, rr-boltdb should be globally available
 				storage, err := p.constructors[drStr].KvFromConfig(k)
 				if err != nil {
 					errCh <- errors.E(op, err)
@@ -180,7 +180,7 @@ func (p *Plugin) Stop(ctx context.Context) error {
 	}
 }
 
-// Collects will get all plugins which implement Storage interface
+// Collects will get all plugins that implement the Storage interface
 func (p *Plugin) Collects() []*dep.In {
 	return []*dep.In{
 		dep.Fits(func(pp any) {

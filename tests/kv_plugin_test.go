@@ -16,7 +16,7 @@ import (
 	"github.com/roadrunner-server/config/v4"
 	"github.com/roadrunner-server/endure/v2"
 	goridgeRpc "github.com/roadrunner-server/goridge/v3/pkg/rpc"
-	"github.com/roadrunner-server/kv/v4"
+	"github.com/roadrunner-server/kv/v5"
 	"github.com/roadrunner-server/logger/v4"
 	"github.com/roadrunner-server/memcached/v4"
 	"github.com/roadrunner-server/memory/v4"
@@ -29,9 +29,8 @@ func TestKVInit(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-kv-init.yaml",
-		Prefix:  "rr",
 	}
 
 	err := cont.RegisterAll(
@@ -109,9 +108,8 @@ func TestKVNoInterval(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-kv-bolt-no-interval.yaml",
-		Prefix:  "rr",
 	}
 
 	err := cont.RegisterAll(
@@ -184,9 +182,8 @@ func TestKVCreateToReopenWithPerms(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-kv-bolt-perms.yaml",
-		Prefix:  "rr",
 	}
 
 	err := cont.RegisterAll(
@@ -252,9 +249,8 @@ func TestKVCreateToReopenWithPerms2(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-kv-bolt-perms.yaml",
-		Prefix:  "rr",
 	}
 
 	err := cont.RegisterAll(
@@ -329,7 +325,7 @@ func kvSetTest(t *testing.T) {
 	conn, err := net.Dial("tcp", "127.0.0.1:6001")
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
-	// WorkerList contains list of workers.
+	// WorkerList contains a list of workers.
 	p := &kvProto.Request{
 		Storage: "boltdb-south",
 		Items: []*kvProto.Item{
@@ -349,7 +345,7 @@ func kvHasTest(t *testing.T) {
 	conn, err := net.Dial("tcp", "127.0.0.1:6001")
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
-	// WorkerList contains list of workers.
+	// WorkerList contains a list of workers.
 	p := &kvProto.Request{
 		Storage: "boltdb-south",
 		Items: []*kvProto.Item{
