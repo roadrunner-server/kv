@@ -12,16 +12,16 @@ import (
 	"time"
 
 	kvProto "github.com/roadrunner-server/api/v4/build/kv/v1"
-	"github.com/roadrunner-server/boltdb/v4"
-	"github.com/roadrunner-server/config/v4"
+	"github.com/roadrunner-server/boltdb/v5"
+	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
 	goridgeRpc "github.com/roadrunner-server/goridge/v3/pkg/rpc"
 	"github.com/roadrunner-server/kv/v5"
-	"github.com/roadrunner-server/logger/v4"
-	"github.com/roadrunner-server/memcached/v4"
-	"github.com/roadrunner-server/memory/v4"
-	"github.com/roadrunner-server/redis/v4"
-	rpcPlugin "github.com/roadrunner-server/rpc/v4"
+	"github.com/roadrunner-server/logger/v5"
+	"github.com/roadrunner-server/memcached/v5"
+	"github.com/roadrunner-server/memory/v5"
+	"github.com/roadrunner-server/redis/v5"
+	rpcPlugin "github.com/roadrunner-server/rpc/v5"
 	"github.com/stretchr/testify/assert"
 )
 
