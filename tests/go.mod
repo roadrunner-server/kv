@@ -2,8 +2,6 @@ module tests
 
 go 1.22.5
 
-toolchain go1.23rc1
-
 require (
 	github.com/roadrunner-server/api/v4 v4.15.0
 	github.com/roadrunner-server/boltdb/v5 v5.0.0
