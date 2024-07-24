@@ -1,23 +1,23 @@
 module tests
 
-go 1.22.5
+go 1.22
+
+toolchain go1.22.5
 
 require (
 	github.com/roadrunner-server/api/v4 v4.16.0
-	github.com/roadrunner-server/boltdb/v5 v5.0.0
-	github.com/roadrunner-server/config/v5 v5.0.0
+	github.com/roadrunner-server/boltdb/v5 v5.0.1
+	github.com/roadrunner-server/config/v5 v5.0.1
 	github.com/roadrunner-server/endure/v2 v2.4.6
-	github.com/roadrunner-server/goridge/v3 v3.8.2
+	github.com/roadrunner-server/goridge/v3 v3.8.3
 	github.com/roadrunner-server/kv/v5 v5.0.0
-	github.com/roadrunner-server/logger/v5 v5.0.0
-	github.com/roadrunner-server/memcached/v5 v5.0.0
-	github.com/roadrunner-server/memory/v5 v5.0.0
-	github.com/roadrunner-server/redis/v5 v5.0.0
-	github.com/roadrunner-server/rpc/v5 v5.0.0
+	github.com/roadrunner-server/logger/v5 v5.0.1
+	github.com/roadrunner-server/memcached/v5 v5.0.1
+	github.com/roadrunner-server/memory/v5 v5.0.1
+	github.com/roadrunner-server/redis/v5 v5.0.1
+	github.com/roadrunner-server/rpc/v5 v5.0.1
 	github.com/stretchr/testify v1.9.0
 )
-
-require github.com/roadrunner-server/redis/v4 v4.4.5 // indirect
 
 replace github.com/roadrunner-server/kv/v5 => ../
 
@@ -42,9 +42,9 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.5.3 // indirect
-	github.com/redis/go-redis/v9 v9.5.3 // indirect
+	github.com/redis/go-redis/v9 v9.6.0 // indirect
 	github.com/roadrunner-server/errors v1.4.1 // indirect
-	github.com/roadrunner-server/tcplisten v1.5.0 // indirect
+	github.com/roadrunner-server/tcplisten v1.5.1 // indirect
 	github.com/sagikazarmark/locafero v0.6.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
@@ -64,7 +64,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.28.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/exp v0.0.0-20240707233637-46b078467d37 // indirect
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
