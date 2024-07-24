@@ -7,7 +7,7 @@ toolchain go1.22.5
 require (
 	github.com/roadrunner-server/api/v4 v4.16.0
 	github.com/roadrunner-server/endure/v2 v2.4.6
-	github.com/roadrunner-server/errors v1.4.0
+	github.com/roadrunner-server/errors v1.4.1
 	go.opentelemetry.io/otel/sdk v1.28.0
 	go.uber.org/zap v1.27.0
 )
