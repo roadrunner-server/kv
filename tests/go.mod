@@ -1,8 +1,6 @@
 module tests
 
-go 1.22
-
-toolchain go1.22.5
+go 1.22.5
 
 require (
 	github.com/roadrunner-server/api/v4 v4.16.0
