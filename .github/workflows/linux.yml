@@ -43,7 +43,7 @@ jobs:
           cd tests
           mkdir ./coverage-ci
 
-          docker-compose -f env/docker-compose-memcached.yaml up -d
+          docker compose -f env/docker-compose-memcached.yaml up -d
           sleep 30
           if [ "$(docker ps -q -f status=running -f name=memcached_1)" ]; then
           echo "KV Docker container started successfully."
