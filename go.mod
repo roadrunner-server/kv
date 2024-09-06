@@ -2,7 +2,7 @@ module github.com/roadrunner-server/kv/v5
 
 go 1.23
 
-toolchain go1.23.0
+toolchain go1.23.1
 
 require (
 	github.com/roadrunner-server/api/v4 v4.16.0
