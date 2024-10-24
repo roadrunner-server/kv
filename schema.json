@@ -1,0 +1,97 @@
+{
+  "$id": "https://raw.githubusercontent.com/roadrunner-server/kv/refs/heads/master/schema.json",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "description": "All the valid configuration parameters for the KV plugin for RoadRunner.",
+  "title": "roadrunner-kv",
+  "minProperties": 1,
+  "additionalProperties": false,
+  "patternProperties": {
+    "[a-zA-Z0-9_-]*": {
+      "description": "The name of the key-value storage, as used in your application.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "driver"
+      ],
+      "properties": {
+        "driver": {
+          "description": "The driver to use.",
+          "type": "string",
+          "enum": [
+            "boltdb",
+            "memcached",
+            "memory",
+            "redis"
+          ]
+        },
+        "config": {
+          "description": "You may override the global configuration of the driver. If you provided a global configuration for the plugin, this section can be omitted and the global configuration will be used instead. If neither are present, the KV storage will not load.",
+          "type": "object"
+        }
+      },
+      "if": {
+        "properties": {
+          "driver": {
+            "enum": [
+              "boltdb"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "config": {
+            "$ref": "https://raw.githubusercontent.com/roadrunner-server/boltdb/refs/heads/master/schema.json#/definitions/driver"
+          }
+        }
+      },
+      "else": {
+        "if": {
+          "properties": {
+            "driver": {
+              "enum": [
+                "memcached"
+              ]
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "$ref": "https://raw.githubusercontent.com/roadrunner-server/memcached/refs/heads/master/schema.json"
+          }
+        },
+        "else": {
+          "if": {
+            "properties": {
+              "driver": {
+                "enum": [
+                  "redis"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "config": {
+                "$ref": "https://raw.githubusercontent.com/roadrunner-server/redis/refs/heads/master/schema.json"
+              }
+            }
+          },
+          "else": {
+            "if": {
+              "properties": {
+                "driver": {
+                  "enum": [
+                    "memory"
+                  ]
+                }
+              }
+            },
+            "then": true,
+            "else": false
+          }
+        }
+      }
+    }
+  }
+}
