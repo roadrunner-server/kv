@@ -2,6 +2,7 @@
   "$id": "https://raw.githubusercontent.com/roadrunner-server/kv/refs/heads/master/schema.json",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "All the valid configuration parameters for the KV plugin for RoadRunner.",
+  "type": "object",
   "title": "roadrunner-kv",
   "minProperties": 1,
   "additionalProperties": false,
