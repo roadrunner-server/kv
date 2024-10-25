@@ -57,7 +57,9 @@
         },
         "then": {
           "properties": {
-            "$ref": "https://raw.githubusercontent.com/roadrunner-server/memcached/refs/heads/master/schema.json"
+            "config": {
+              "$ref": "https://raw.githubusercontent.com/roadrunner-server/memcached/refs/heads/master/schema.json"
+            }
           }
         },
         "else": {
@@ -87,8 +89,19 @@
                 }
               }
             },
-            "then": true,
-            "else": false
+            "then": {
+              "required": [
+                "driver",
+                "config"
+              ],
+              "properties": {
+                "config": {
+                  "type": "object",
+                  "description": "The memory plugin does not support configuration, but requires an empty config object to be present due to parsing logic and the fact that memory has no global configuration to inherit from.",
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         }
       }
