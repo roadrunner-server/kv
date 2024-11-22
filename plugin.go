@@ -109,59 +109,50 @@ func (p *Plugin) Serve() chan error {
 			switch {
 			// local configuration section key
 			case p.cfgPlugin.Has(configKey):
-				if _, ok := p.constructors[drStr]; !ok {
-					p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
-					continue
-				}
-
-				storage, err := p.constructors[drStr].KvFromConfig(configKey)
+				err := p.checkAndSaveStorage(drStr, k, configKey)
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
 				}
-
-				// save the storage
-				p.storages[k] = storage
 				// try global then
 			case p.cfgPlugin.Has(k):
-				if _, ok := p.constructors[drStr]; !ok {
-					p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
-					continue
-				}
-
-				// use only key for the driver registration, for example, rr-boltdb should be globally available
-				storage, err := p.constructors[drStr].KvFromConfig(k)
+				err := p.checkAndSaveStorage(drStr, k, k)
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
 				}
-
-				// save the storage
-				p.storages[k] = storage
 			default:
 				p.log.Warn("can't find local or global configuration, this section will be skipped", zap.String("local", configKey), zap.String("global", k))
 
-				if _, ok := p.constructors[drStr]; !ok {
-					p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
-					continue
-				}
-
-				// empty key if there is no local or global configuration
-				storage, err := p.constructors[drStr].KvFromConfig("")
+				err := p.checkAndSaveStorage(drStr, k, "")
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
 				}
-
-				// save the storage
-				p.storages[k] = storage
-				continue
 			}
 		}
 		continue
 	}
 
 	return errCh
+}
+
+func (p *Plugin) checkAndSaveStorage(drStr string, name, cfgkey string) error {
+	if _, ok := p.constructors[drStr]; !ok {
+		p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
+		return nil
+	}
+
+	// use only key for the driver registration, for example, rr-boltdb should be globally available
+	storage, err := p.constructors[drStr].KvFromConfig(cfgkey)
+	if err != nil {
+		return err
+	}
+
+	// save the storage
+	p.storages[name] = storage
+
+	return nil
 }
 
 func (p *Plugin) Weight() uint {
