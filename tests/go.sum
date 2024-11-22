@@ -71,8 +71,7 @@ github.com/roadrunner-server/logger/v5 v5.0.4 h1:DiydGsyhiqLRR8HYaT8jarzdw1LS+Wi
 github.com/roadrunner-server/logger/v5 v5.0.4/go.mod h1:ygRLH1siEFgSWg/8u+8WXCHiReSA9hJDZFHyWurt/hY=
 github.com/roadrunner-server/memcached/v5 v5.0.4 h1:E7tgbEIvg173RTuz9OTKB+44Zyj24KV+CHTmuhnCWG8=
 github.com/roadrunner-server/memcached/v5 v5.0.4/go.mod h1:X6XwkAGo77TT/z1l3dw5vXM0h6Eog+9h2posvmQN6RE=
-github.com/roadrunner-server/memory/v5 v5.0.4 h1:zA4clFzsu5fgg85IBjXln0FeORTXUnJHai1CLG58LDQ=
-github.com/roadrunner-server/memory/v5 v5.0.4/go.mod h1:/m5zhV2PAPWW9oxFPYYPXNvc99EIiFaNLuhKeUzQcdw=
+github.com/roadrunner-server/memory/v5 v5.1.0 h1:S5m3erlbqxgaDkjHcbxfKmHZRwWKLk6lr5bLa7Z9/v4=
 github.com/roadrunner-server/redis/v5 v5.0.4 h1:dgQv1gtk81ZXvbT9TVG1hAkZC4AZZIZ7fI/yE20ISEw=
 github.com/roadrunner-server/redis/v5 v5.0.4/go.mod h1:lVZCjANuEw71Kzvg+INGJaehiopkDEUBfzzjBt6rWNg=
 github.com/roadrunner-server/rpc/v5 v5.0.4 h1:QZW42Lunhjx5sDDf7BhyAdPQFyR9OCeBKdZp/2gMiQQ=

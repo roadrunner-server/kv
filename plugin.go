@@ -139,7 +139,22 @@ func (p *Plugin) Serve() chan error {
 				// save the storage
 				p.storages[k] = storage
 			default:
-				p.log.Error("can't find local or global configuration, this section will be skipped", zap.String("local", configKey), zap.String("global", k))
+				p.log.Warn("can't find local or global configuration, this section will be skipped", zap.String("local", configKey), zap.String("global", k))
+
+				if _, ok := p.constructors[drStr]; !ok {
+					p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
+					continue
+				}
+
+				// empty key if there is no local or global configuration
+				storage, err := p.constructors[drStr].KvFromConfig("")
+				if err != nil {
+					errCh <- errors.E(op, err)
+					return errCh
+				}
+
+				// save the storage
+				p.storages[k] = storage
 				continue
 			}
 		}

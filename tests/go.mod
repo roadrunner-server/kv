@@ -13,7 +13,7 @@ require (
 	github.com/roadrunner-server/kv/v5 v5.0.0
 	github.com/roadrunner-server/logger/v5 v5.0.4
 	github.com/roadrunner-server/memcached/v5 v5.0.4
-	github.com/roadrunner-server/memory/v5 v5.0.4
+	github.com/roadrunner-server/memory/v5 v5.1.0
 	github.com/roadrunner-server/redis/v5 v5.0.4
 	github.com/roadrunner-server/rpc/v5 v5.0.4
 	github.com/stretchr/testify v1.9.0
