@@ -16,7 +16,7 @@ require (
 	github.com/roadrunner-server/memory/v5 v5.1.0
 	github.com/roadrunner-server/redis/v5 v5.0.4
 	github.com/roadrunner-server/rpc/v5 v5.0.4
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 replace github.com/roadrunner-server/kv/v5 => ../
