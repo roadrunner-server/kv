@@ -5,7 +5,7 @@ go 1.23
 toolchain go1.23.4
 
 require (
-	github.com/roadrunner-server/api/v4 v4.17.0
+	github.com/roadrunner-server/api/v4 v4.18.1
 	github.com/roadrunner-server/boltdb/v5 v5.1.1
 	github.com/roadrunner-server/config/v5 v5.1.1
 	github.com/roadrunner-server/endure/v2 v2.6.1
