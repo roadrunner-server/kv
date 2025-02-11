@@ -6,16 +6,16 @@ toolchain go1.23.4
 
 require (
 	github.com/roadrunner-server/api/v4 v4.18.1
-	github.com/roadrunner-server/boltdb/v5 v5.1.2
-	github.com/roadrunner-server/config/v5 v5.1.2
+	github.com/roadrunner-server/boltdb/v5 v5.1.3
+	github.com/roadrunner-server/config/v5 v5.1.3
 	github.com/roadrunner-server/endure/v2 v2.6.1
 	github.com/roadrunner-server/goridge/v3 v3.8.3
 	github.com/roadrunner-server/kv/v5 v5.0.0
-	github.com/roadrunner-server/logger/v5 v5.1.2
-	github.com/roadrunner-server/memcached/v5 v5.1.2
-	github.com/roadrunner-server/memory/v5 v5.2.2
-	github.com/roadrunner-server/redis/v5 v5.1.2
-	github.com/roadrunner-server/rpc/v5 v5.1.2
+	github.com/roadrunner-server/logger/v5 v5.1.3
+	github.com/roadrunner-server/memcached/v5 v5.1.3
+	github.com/roadrunner-server/memory/v5 v5.2.3
+	github.com/roadrunner-server/redis/v5 v5.1.3
+	github.com/roadrunner-server/rpc/v5 v5.1.3
 	github.com/stretchr/testify v1.10.0
 )
 
@@ -65,7 +65,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.34.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/exp v0.0.0-20250207012021-f9890c6ad9f3 // indirect
+	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
