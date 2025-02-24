@@ -56,8 +56,8 @@ github.com/redis/go-redis/v9 v9.7.1 h1:4LhKRCIduqXqtvCUlaq9c8bdHOkICjDMrr1+Zb3os
 github.com/redis/go-redis/v9 v9.7.1/go.mod h1:f6zhXITC7JUJIlPEiBOTXxJgPLdZcA93GewI7inzyWw=
 github.com/roadrunner-server/api/v4 v4.18.1 h1:IA01DjK7wPXkSAUc0Bg2d3hmc/XMI0DYn0BKbBju9bI=
 github.com/roadrunner-server/api/v4 v4.18.1/go.mod h1:VdCLIpnjKFHNspqRlu5zfPvrDS9eLR7fYy5K9HYKNkE=
-github.com/roadrunner-server/boltdb/v5 v5.1.4 h1:1BSWuoXs5xNELdXjMlcrnQBuMcHOwe1Uvtg/3Z/IlFc=
-github.com/roadrunner-server/boltdb/v5 v5.1.4/go.mod h1:0cMQJ4yB+toCB9S24zAXhJx035fE3Avfb4/DnL3wAQc=
+github.com/roadrunner-server/boltdb/v5 v5.1.5 h1:GlDnH6z6HAee7Ryh2McXbLDM4uTCnGAFJdBbrM0y9A0=
+github.com/roadrunner-server/boltdb/v5 v5.1.5/go.mod h1:0cMQJ4yB+toCB9S24zAXhJx035fE3Avfb4/DnL3wAQc=
 github.com/roadrunner-server/config/v5 v5.1.5 h1:TExbI89dnZ3IVjAmShm8HzyYGZtlujuu7ICKuO6oqOk=
 github.com/roadrunner-server/config/v5 v5.1.5/go.mod h1:pBvz+xcYrWx93BZsyy+br/86BBDkZ825I/O1CzzXuL4=
 github.com/roadrunner-server/endure/v2 v2.6.1 h1:vx+3ayn8HXnyeCcjKWwe+DfPrwL5sOQobugzCId4F7k=
@@ -68,8 +68,8 @@ github.com/roadrunner-server/goridge/v3 v3.8.3 h1:XmjrOFnI6ZbQTPaP39DEk8KwLUNTgj
 github.com/roadrunner-server/goridge/v3 v3.8.3/go.mod h1:4TZU8zgkKIZCsH51qwGMpvyXCT59u/8z6q8sCe4ZGAQ=
 github.com/roadrunner-server/logger/v5 v5.1.5 h1:JankpP3sApSOWanH8yfdB/3zXafHgtzi8YsFMhchx/Y=
 github.com/roadrunner-server/logger/v5 v5.1.5/go.mod h1:iuED4cATF8Qa7WfNwAvPeCrapfkjHjghtsjgsZcW3Qo=
-github.com/roadrunner-server/memcached/v5 v5.1.4 h1:6ry/jYu+mrwDjTnzXpN+CXHqVQCrY5g6gd3CM7gkOw4=
-github.com/roadrunner-server/memcached/v5 v5.1.4/go.mod h1:SZbSG+VfmxPZEtJeqeGxw2/wG8KWpc9xX5RALj3yJwQ=
+github.com/roadrunner-server/memcached/v5 v5.1.5 h1:SHlSgy6pvw97JJvvWeuCNi0G7ZatfMOsumWPaKoLiQs=
+github.com/roadrunner-server/memcached/v5 v5.1.5/go.mod h1:SZbSG+VfmxPZEtJeqeGxw2/wG8KWpc9xX5RALj3yJwQ=
 github.com/roadrunner-server/memory/v5 v5.2.5 h1:xF14RvZeUXqcfMpEvu1kaARY1OOl0Kb5Dp27oTfIZ/o=
 github.com/roadrunner-server/memory/v5 v5.2.5/go.mod h1:wdfMX5mJxq50EFfDxazmYgADfIgmJuQg7pgtR8aNbGM=
 github.com/roadrunner-server/redis/v5 v5.1.5 h1:gIL72XOoxco5Trdvy7Nq0NZVbqLp15eAjWLH3BPtLdA=
