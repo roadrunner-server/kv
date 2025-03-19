@@ -2,12 +2,11 @@ package kv
 
 import (
 	"context"
-	"go.opentelemetry.io/otel/trace"
-
 	kvv1 "github.com/roadrunner-server/api/v4/build/kv/v1"
 	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/trace"
 )
 
 const (
