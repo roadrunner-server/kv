@@ -38,9 +38,9 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/redis/go-redis/extra/rediscmd/v9 v9.7.1 // indirect
-	github.com/redis/go-redis/extra/redisotel/v9 v9.7.1 // indirect
-	github.com/redis/go-redis/v9 v9.7.1 // indirect
+	github.com/redis/go-redis/extra/rediscmd/v9 v9.7.3 // indirect
+	github.com/redis/go-redis/extra/redisotel/v9 v9.7.3 // indirect
+	github.com/redis/go-redis/v9 v9.7.3 // indirect
 	github.com/roadrunner-server/errors v1.4.1 // indirect
 	github.com/roadrunner-server/tcplisten v1.5.2 // indirect
 	github.com/sagikazarmark/locafero v0.8.0 // indirect
