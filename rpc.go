@@ -217,7 +217,7 @@ func getStorage(in *kvv1.Request, span trace.Span, r *rpc, op errors.Op) (kv.Sto
 
 func composeKeys(in *kvv1.Request) *[]string {
 	ln := len(in.GetItems())
-	keys := make([]string, 0, ln)
+	keys := make([]string, ln)
 
 	for i := 0; i < ln; i++ {
 		keys[i] = in.Items[i].GetKey()
@@ -227,7 +227,7 @@ func composeKeys(in *kvv1.Request) *[]string {
 }
 
 func from(tr []*kvv1.Item) *[]kv.Item {
-	items := make([]kv.Item, 0, len(tr))
+	items := make([]kv.Item, len(tr))
 	for i := range tr {
 		items[i] = &Item{
 			key:     tr[i].GetKey(),
