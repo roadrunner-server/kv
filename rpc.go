@@ -34,7 +34,7 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 		return e
 	}
 
-	ret, err := storage.Has(composeKeys(in)...)
+	ret, err := storage.Has(*composeKeys(in)...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -64,7 +64,7 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 		return e
 	}
 
-	err := storage.Set(from(in.GetItems())...)
+	err := storage.Set(*from(in.GetItems())...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -85,7 +85,7 @@ func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 		return e
 	}
 
-	ret, err := storage.MGet(composeKeys(in)...)
+	ret, err := storage.MGet(*composeKeys(in)...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -114,7 +114,7 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 		return e
 	}
 
-	err := storage.MExpire(from(in.GetItems())...)
+	err := storage.MExpire(*from(in.GetItems())...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -136,7 +136,7 @@ func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 		return e
 	}
 
-	ret, err := storage.TTL(composeKeys(in)...)
+	ret, err := storage.TTL(*composeKeys(in)...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -166,7 +166,7 @@ func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
 		return e
 	}
 
-	err := storage.Delete(composeKeys(in)...)
+	err := storage.Delete(*composeKeys(in)...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -215,26 +215,26 @@ func getStorage(in *kvv1.Request, span trace.Span, r *rpc, op errors.Op) (kv.Sto
 	return storage, nil
 }
 
-func composeKeys(in *kvv1.Request) []string {
+func composeKeys(in *kvv1.Request) *[]string {
 	ln := len(in.GetItems())
 	keys := make([]string, 0, ln)
 
 	for i := 0; i < ln; i++ {
-		keys = append(keys, in.Items[i].Key)
+		keys[i] = in.Items[i].GetKey()
 	}
 
-	return keys
+	return &keys
 }
 
-func from(tr []*kvv1.Item) []kv.Item {
+func from(tr []*kvv1.Item) *[]kv.Item {
 	items := make([]kv.Item, 0, len(tr))
 	for i := range tr {
-		items = append(items, &Item{
+		items[i] = &Item{
 			key:     tr[i].GetKey(),
 			val:     tr[i].GetValue(),
 			timeout: tr[i].GetTimeout(),
-		})
+		}
 	}
 
-	return items
+	return &items
 }
