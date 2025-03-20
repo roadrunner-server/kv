@@ -7,7 +7,6 @@ import (
 	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/otel/trace"
 )
 
 const (
@@ -29,9 +28,10 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:has")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	ret, err := storage.Has(*composeKeys(in)...)
@@ -59,9 +59,10 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:set")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	err := storage.Set(*from(in.GetItems())...)
@@ -80,9 +81,10 @@ func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mget")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	ret, err := storage.MGet(*composeKeys(in)...)
@@ -109,9 +111,10 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mexpire")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	err := storage.MExpire(*from(in.GetItems())...)
@@ -130,10 +133,11 @@ func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:ttl")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	ret, err := storage.TTL(*composeKeys(in)...)
@@ -160,10 +164,11 @@ func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:delete")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 
 	if e != nil {
-		return e
+		span.RecordError(e)
+		return errors.E(op, e)
 	}
 
 	err := storage.Delete(*composeKeys(in)...)
@@ -182,7 +187,7 @@ func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
 	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:clear")
 	defer span.End()
 
-	storage, e := getStorage(in, span, r, op)
+	storage, e := r.getStorage(in)
 
 	if e != nil {
 		return e
@@ -197,19 +202,15 @@ func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
 	return nil
 }
 
-func getStorage(in *kvv1.Request, span trace.Span, r *rpc, op errors.Op) (kv.Storage, error) {
+func (r *rpc) getStorage(in *kvv1.Request) (kv.Storage, error) {
 	if in.GetStorage() == "" {
-		e := errors.Str("no storage provided")
-		span.RecordError(e)
-		return nil, errors.E(op, e)
+		return nil, errors.Str("no storage provided")
 	}
 
 	storage, ok := r.storages[in.GetStorage()]
 
 	if !ok {
-		e := errors.Errorf("no such storage: %s", in.GetStorage())
-		span.RecordError(e)
-		return nil, errors.E(op, e)
+		return nil, errors.Errorf("no such storage: %s", in.GetStorage())
 	}
 
 	return storage, nil
