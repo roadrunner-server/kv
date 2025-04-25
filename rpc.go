@@ -40,7 +40,7 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 
 	keys := make([]string, 0, len(in.GetItems()))
 
-	for i := 0; i < len(in.GetItems()); i++ {
+	for i := range in.GetItems() {
 		keys = append(keys, in.Items[i].Key)
 	}
 
@@ -102,7 +102,7 @@ func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 
 	keys := make([]string, 0, len(in.GetItems()))
 
-	for i := 0; i < len(in.GetItems()); i++ {
+	for i := range in.GetItems() {
 		keys = append(keys, in.Items[i].Key)
 	}
 
@@ -168,7 +168,7 @@ func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 
 	keys := make([]string, 0, len(in.GetItems()))
 
-	for i := 0; i < len(in.GetItems()); i++ {
+	for i := range in.GetItems() {
 		keys = append(keys, in.Items[i].Key)
 	}
 
@@ -208,7 +208,7 @@ func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
 
 	keys := make([]string, 0, len(in.GetItems()))
 
-	for i := 0; i < len(in.GetItems()); i++ {
+	for i := range in.GetItems() {
 		keys = append(keys, in.Items[i].Key)
 	}
 
