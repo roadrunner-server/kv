@@ -5,12 +5,12 @@ go 1.26
 toolchain go1.26.0
 
 require (
-	github.com/roadrunner-server/api/v4 v4.23.0
+	github.com/roadrunner-server/api-go/v5 v5.0.0-beta.2
 	github.com/roadrunner-server/boltdb/v5 v5.1.9
 	github.com/roadrunner-server/config/v5 v5.1.9
 	github.com/roadrunner-server/endure/v2 v2.6.2
 	github.com/roadrunner-server/goridge/v3 v3.8.3
-	github.com/roadrunner-server/kv/v5 v5.2.9
+	github.com/roadrunner-server/kv/v6 v6.0.0
 	github.com/roadrunner-server/logger/v5 v5.1.9
 	github.com/roadrunner-server/memcached/v5 v5.1.9
 	github.com/roadrunner-server/memory/v5 v5.2.9
@@ -19,7 +19,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 )
 
-replace github.com/roadrunner-server/kv/v5 => ../
+replace github.com/roadrunner-server/kv/v6 => ../
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -48,6 +48,8 @@ require (
 	github.com/redis/go-redis/extra/redisotel/v9 v9.17.3 // indirect
 	github.com/redis/go-redis/extra/redisprometheus/v9 v9.17.3 // indirect
 	github.com/redis/go-redis/v9 v9.17.3 // indirect
+	github.com/roadrunner-server/api-plugins/v5 v5.0.0-beta.1 // indirect
+	github.com/roadrunner-server/api/v4 v4.23.0 // indirect
 	github.com/roadrunner-server/errors v1.4.1 // indirect
 	github.com/roadrunner-server/tcplisten v1.5.2 // indirect
 	github.com/sagikazarmark/locafero v0.12.0 // indirect

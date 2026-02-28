@@ -2,11 +2,13 @@ package kv
 
 import (
 	"context"
+	"time"
 
-	kvv1 "github.com/roadrunner-server/api/v4/build/kv/v1"
-	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
+	kvv2 "github.com/roadrunner-server/api-go/v5/kv/v2"
+	"github.com/roadrunner-server/api-plugins/v5/kv"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
 
 const (
@@ -21,21 +23,24 @@ type rpc struct {
 	tracer *sdktrace.TracerProvider
 }
 
-// Has accepts []*kvv1.Payload proto payload with Storage and Item
-func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
+// Has accepts []*kvv2.Payload proto payload with Storage and Item
+func (r *rpc) Has(in *kvv2.KvRequest, out *kvv2.KvResponse) error {
 	const op = errors.Op("rpc_has")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:has")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:has")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
 	keys := make([]string, 0, len(in.GetItems()))
@@ -44,7 +49,7 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 		keys = append(keys, in.Items[i].Key)
 	}
 
-	ret, err := r.storages[in.GetStorage()].Has(keys...)
+	ret, err := st.Has(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -52,9 +57,9 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 
 	// update the value in the pointer
 	// save the result
-	out.Items = make([]*kvv1.Item, 0, len(ret))
+	out.Items = make([]*kvv2.KvItem, 0, len(ret))
 	for k := range ret {
-		out.Items = append(out.Items, &kvv1.Item{
+		out.Items = append(out.Items, &kvv2.KvItem{
 			Key: k,
 		})
 	}
@@ -63,18 +68,26 @@ func (r *rpc) Has(in *kvv1.Request, out *kvv1.Response) error {
 }
 
 // Set accepts proto payload with Storage and Item
-func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
+func (r *rpc) Set(in *kvv2.KvRequest, _ *kvv2.KvResponse) error {
 	const op = errors.Op("rpc_set")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:set")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:set")
 	defer span.End()
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	if in.GetStorage() == "" {
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	err := r.storages[in.GetStorage()].Set(from(in.GetItems())...)
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
+	}
+
+	err := st.Set(ctx, from(in.GetItems())...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -84,20 +97,23 @@ func (r *rpc) Set(in *kvv1.Request, _ *kvv1.Response) error {
 }
 
 // MGet accept proto payload with Storage and Item
-func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
+func (r *rpc) MGet(in *kvv2.KvRequest, out *kvv2.KvResponse) error { //nolint:dupl
 	const op = errors.Op("rpc_mget")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mget")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mget")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
 	keys := make([]string, 0, len(in.GetItems()))
@@ -106,15 +122,15 @@ func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 		keys = append(keys, in.Items[i].Key)
 	}
 
-	ret, err := r.storages[in.GetStorage()].MGet(keys...)
+	ret, err := st.MGet(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
 	}
 
-	out.Items = make([]*kvv1.Item, 0, len(ret))
+	out.Items = make([]*kvv2.KvItem, 0, len(ret))
 	for k := range ret {
-		out.Items = append(out.Items, &kvv1.Item{
+		out.Items = append(out.Items, &kvv2.KvItem{
 			Key:   k,
 			Value: ret[k],
 		})
@@ -124,23 +140,26 @@ func (r *rpc) MGet(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 }
 
 // MExpire accept proto payload with Storage and Item
-func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
+func (r *rpc) MExpire(in *kvv2.KvRequest, _ *kvv2.KvResponse) error {
 	const op = errors.Op("rpc_mexpire")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mexpire")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:mexpire")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	err := r.storages[in.GetStorage()].MExpire(from(in.GetItems())...)
+	err := st.MExpire(ctx, from(in.GetItems())...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -150,20 +169,23 @@ func (r *rpc) MExpire(in *kvv1.Request, _ *kvv1.Response) error {
 }
 
 // TTL accept proto payload with Storage and Item
-func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
+func (r *rpc) TTL(in *kvv2.KvRequest, out *kvv2.KvResponse) error { //nolint:dupl
 	const op = errors.Op("rpc_ttl")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:ttl")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:ttl")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
 	keys := make([]string, 0, len(in.GetItems()))
@@ -172,38 +194,45 @@ func (r *rpc) TTL(in *kvv1.Request, out *kvv1.Response) error { //nolint:dupl
 		keys = append(keys, in.Items[i].Key)
 	}
 
-	ret, err := r.storages[in.GetStorage()].TTL(keys...)
+	ret, err := st.TTL(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
 	}
 
-	out.Items = make([]*kvv1.Item, 0, len(ret))
+	out.Items = make([]*kvv2.KvItem, 0, len(ret))
 	for k := range ret {
-		out.Items = append(out.Items, &kvv1.Item{
-			Key:     k,
-			Timeout: ret[k],
-		})
+		item := &kvv2.KvItem{Key: k}
+		if ret[k] != "" {
+			t, err := time.Parse(time.RFC3339, ret[k])
+			if err == nil {
+				item.Ttl = durationpb.New(time.Until(t))
+			}
+		}
+		out.Items = append(out.Items, item)
 	}
 
 	return nil
 }
 
 // Delete accept proto payload with Storage and Item
-func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
-	const op = errors.Op("rcp_delete")
+func (r *rpc) Delete(in *kvv2.KvRequest, _ *kvv2.KvResponse) error {
+	const op = errors.Op("rpc_delete")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:delete")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:delete")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
 	keys := make([]string, 0, len(in.GetItems()))
@@ -212,7 +241,7 @@ func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
 		keys = append(keys, in.Items[i].Key)
 	}
 
-	err := r.storages[in.GetStorage()].Delete(keys...)
+	err := st.Delete(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -222,23 +251,26 @@ func (r *rpc) Delete(in *kvv1.Request, _ *kvv1.Response) error {
 }
 
 // Clear clean the storage
-func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
-	const op = errors.Op("rcp_delete")
+func (r *rpc) Clear(in *kvv2.KvRequest, _ *kvv2.KvResponse) error {
+	const op = errors.Op("rpc_clear")
 
-	_, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:clear")
+	ctx, span := r.tracer.Tracer(tracerName).Start(context.Background(), "kv:clear")
 	defer span.End()
 
 	if in.GetStorage() == "" {
-		span.RecordError(errors.Str("no storage provided"))
-		return errors.E(op, errors.Str("no storage provided"))
+		err := errors.Str("no storage provided")
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	if _, ok := r.storages[in.GetStorage()]; !ok {
-		span.RecordError(errors.Errorf("no such storage: %s", in.GetStorage()))
-		return errors.E(op, errors.Errorf("no such storage: %s", in.GetStorage()))
+	st, ok := r.storages[in.GetStorage()]
+	if !ok {
+		err := errors.Errorf("no such storage: %s", in.GetStorage())
+		span.RecordError(err)
+		return errors.E(op, err)
 	}
 
-	err := r.storages[in.GetStorage()].Clear()
+	err := st.Clear(ctx)
 	if err != nil {
 		span.RecordError(err)
 		return errors.E(op, err)
@@ -247,13 +279,17 @@ func (r *rpc) Clear(in *kvv1.Request, _ *kvv1.Response) error {
 	return nil
 }
 
-func from(tr []*kvv1.Item) []kv.Item {
+func from(tr []*kvv2.KvItem) []kv.Item {
 	items := make([]kv.Item, 0, len(tr))
 	for i := range tr {
+		var timeout string
+		if ttl := tr[i].GetTtl(); ttl != nil {
+			timeout = time.Now().Add(ttl.AsDuration()).Format(time.RFC3339)
+		}
 		items = append(items, &Item{
 			key:     tr[i].GetKey(),
 			val:     tr[i].GetValue(),
-			timeout: tr[i].GetTimeout(),
+			timeout: timeout,
 		})
 	}
 

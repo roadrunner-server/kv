@@ -1,15 +1,17 @@
-module github.com/roadrunner-server/kv/v5
+module github.com/roadrunner-server/kv/v6
 
 go 1.26
 
 toolchain go1.26.0
 
 require (
-	github.com/roadrunner-server/api/v4 v4.23.0
+	github.com/roadrunner-server/api-go/v5 v5.0.0-beta.2
+	github.com/roadrunner-server/api-plugins/v5 v5.0.0-beta.1
 	github.com/roadrunner-server/endure/v2 v2.6.2
 	github.com/roadrunner-server/errors v1.4.1
 	go.opentelemetry.io/otel/sdk v1.40.0
 	go.uber.org/zap v1.27.1
+	google.golang.org/protobuf v1.36.11
 )
 
 require (
@@ -25,5 +27,4 @@ require (
 	go.opentelemetry.io/otel/trace v1.40.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
-	google.golang.org/protobuf v1.36.11 // indirect
 )

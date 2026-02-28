@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	kvProto "github.com/roadrunner-server/api/v4/build/kv/v1"
+	kvProto "github.com/roadrunner-server/api-go/v5/kv/v2"
 	"github.com/roadrunner-server/boltdb/v5"
 	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
 	goridgeRpc "github.com/roadrunner-server/goridge/v3/pkg/rpc"
-	"github.com/roadrunner-server/kv/v5"
+	"github.com/roadrunner-server/kv/v6"
 	"github.com/roadrunner-server/logger/v5"
 	"github.com/roadrunner-server/memcached/v5"
 	"github.com/roadrunner-server/memory/v5"
@@ -326,9 +326,9 @@ func kvSetTest(t *testing.T) {
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 	// WorkerList contains a list of workers.
-	p := &kvProto.Request{
+	p := &kvProto.KvRequest{
 		Storage: "boltdb-south",
-		Items: []*kvProto.Item{
+		Items: []*kvProto.KvItem{
 			{
 				Key:   "key",
 				Value: []byte("val"),
@@ -336,7 +336,7 @@ func kvSetTest(t *testing.T) {
 		},
 	}
 
-	resp := &kvProto.Response{}
+	resp := &kvProto.KvResponse{}
 	err = client.Call("kv.Set", p, resp)
 	assert.NoError(t, err)
 }
@@ -346,9 +346,9 @@ func kvHasTest(t *testing.T) {
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 	// WorkerList contains a list of workers.
-	p := &kvProto.Request{
+	p := &kvProto.KvRequest{
 		Storage: "boltdb-south",
-		Items: []*kvProto.Item{
+		Items: []*kvProto.KvItem{
 			{
 				Key:   "key",
 				Value: []byte("val"),
@@ -356,7 +356,7 @@ func kvHasTest(t *testing.T) {
 		},
 	}
 
-	ret := &kvProto.Response{}
+	ret := &kvProto.KvResponse{}
 	err = client.Call("kv.Has", p, ret)
 	assert.NoError(t, err)
 	assert.Len(t, ret.GetItems(), 1)
