@@ -140,8 +140,7 @@ func (p *Plugin) Serve() chan error {
 
 func (p *Plugin) checkAndSaveStorage(ctx context.Context, drStr string, name, cfgkey string) error {
 	if _, ok := p.constructors[drStr]; !ok {
-		p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
-		return nil
+		return errors.Errorf("no such constructor was registered: %s, registered: %v", drStr, p.constructors)
 	}
 
 	// use only key for the driver registration, for example, rr-boltdb should be globally available
