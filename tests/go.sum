@@ -81,6 +81,8 @@ github.com/roadrunner-server/errors v1.4.1 h1:LKNeaCGiwd3t8IaL840ZNF3UA9yDQlpvHn
 github.com/roadrunner-server/errors v1.4.1/go.mod h1:qeffnIKG0e4j1dzGpa+OGY5VKSfMphizvqWIw8s2lAo=
 github.com/roadrunner-server/goridge/v3 v3.8.3 h1:XmjrOFnI6ZbQTPaP39DEk8KwLUNTgjluK3pcZaW6ixQ=
 github.com/roadrunner-server/goridge/v3 v3.8.3/go.mod h1:4TZU8zgkKIZCsH51qwGMpvyXCT59u/8z6q8sCe4ZGAQ=
+github.com/roadrunner-server/goridge/v4 v4.0.0-beta.1 h1:dO1wKnuMr4xMmH6DY2ZaZ6FWS+Vo50+C7fuAcyO/xBk=
+github.com/roadrunner-server/goridge/v4 v4.0.0-beta.1/go.mod h1:+gKla9HAyYlk0TsC9VktwtOL63aimsWT3oPsuCLh4/o=
 github.com/roadrunner-server/logger/v5 v5.1.9 h1:3Kn+NYXF7Ww5LvkwMZwkv1q99t5qusIPBsreRJL08JI=
 github.com/roadrunner-server/logger/v5 v5.1.9/go.mod h1:hwct/TWTmxYsVzowLx4g9HkY5z2/gpYOC+UN8btsrAA=
 github.com/roadrunner-server/memcached/v5 v5.1.9 h1:Pom9dZuywQK6ayWQYHbO7STar08/WeBl5WWckUFP51U=

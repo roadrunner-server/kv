@@ -9,7 +9,7 @@ require (
 	github.com/roadrunner-server/boltdb/v5 v5.1.9
 	github.com/roadrunner-server/config/v5 v5.1.9
 	github.com/roadrunner-server/endure/v2 v2.6.2
-	github.com/roadrunner-server/goridge/v3 v3.8.3
+	github.com/roadrunner-server/goridge/v4 v4.0.0-beta.1
 	github.com/roadrunner-server/kv/v6 v6.0.0
 	github.com/roadrunner-server/logger/v5 v5.1.9
 	github.com/roadrunner-server/memcached/v5 v5.1.9
@@ -52,6 +52,7 @@ require (
 	github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.1 // indirect
 	github.com/roadrunner-server/api/v4 v4.23.0 // indirect
 	github.com/roadrunner-server/errors v1.4.1 // indirect
+	github.com/roadrunner-server/goridge/v3 v3.8.3 // indirect
 	github.com/roadrunner-server/tcplisten v1.5.2 // indirect
 	github.com/sagikazarmark/locafero v0.12.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
