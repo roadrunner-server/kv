@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/roadrunner-server/api/v4/plugins/v1/kv"
+	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -103,20 +103,21 @@ func (p *Plugin) Serve() chan error {
 		configKey := fmt.Sprintf("%s.%s.%s", PluginName, k, cfg)
 		// at this point we know, that driver field present in the configuration
 		drName := v.(map[string]any)[driver]
+		ctx := context.Background()
 
 		// driver name should be a string
 		if drStr, ok := drName.(string); ok {
 			switch {
 			// local configuration section key
 			case p.cfgPlugin.Has(configKey):
-				err := p.checkAndSaveStorage(drStr, k, configKey)
+				err := p.checkAndSaveStorage(ctx, drStr, k, configKey)
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
 				}
 				// try global then
 			case p.cfgPlugin.Has(k):
-				err := p.checkAndSaveStorage(drStr, k, k)
+				err := p.checkAndSaveStorage(ctx, drStr, k, k)
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
@@ -124,7 +125,7 @@ func (p *Plugin) Serve() chan error {
 			default:
 				p.log.Warn("can't find local or global configuration, this section will be skipped", zap.String("local", configKey), zap.String("global", k))
 
-				err := p.checkAndSaveStorage(drStr, k, "")
+				err := p.checkAndSaveStorage(ctx, drStr, k, "")
 				if err != nil {
 					errCh <- errors.E(op, err)
 					return errCh
@@ -137,14 +138,13 @@ func (p *Plugin) Serve() chan error {
 	return errCh
 }
 
-func (p *Plugin) checkAndSaveStorage(drStr string, name, cfgkey string) error {
+func (p *Plugin) checkAndSaveStorage(ctx context.Context, drStr string, name, cfgkey string) error {
 	if _, ok := p.constructors[drStr]; !ok {
-		p.log.Warn("no such constructor was registered", zap.String("requested", drStr), zap.Any("registered", p.constructors))
-		return nil
+		return errors.Errorf("no such constructor was registered: %s, registered: %v", drStr, p.constructors)
 	}
 
 	// use only key for the driver registration, for example, rr-boltdb should be globally available
-	storage, err := p.constructors[drStr].KvFromConfig(cfgkey)
+	storage, err := p.constructors[drStr].KvFromConfig(ctx, cfgkey)
 	if err != nil {
 		return err
 	}
@@ -165,7 +165,7 @@ func (p *Plugin) Stop(ctx context.Context) error {
 	go func() {
 		// stop all attached storages
 		for k := range p.storages {
-			p.storages[k].Stop()
+			p.storages[k].Stop(ctx)
 		}
 
 		for k := range p.storages {
