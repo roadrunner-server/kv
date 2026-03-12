@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	kvProto "github.com/roadrunner-server/api-go/v5/kv/v2"
+	kvProto "github.com/roadrunner-server/api-go/v6/kv/v2"
 	"github.com/roadrunner-server/boltdb/v5"
 	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
