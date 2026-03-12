@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	kvv2 "github.com/roadrunner-server/api-go/v5/kv/v2"
-	"github.com/roadrunner-server/api-plugins/v5/kv"
+	kvv2 "github.com/roadrunner-server/api-go/v6/kv/v2"
+	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"google.golang.org/protobuf/types/known/durationpb"

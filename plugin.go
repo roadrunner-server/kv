@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/roadrunner-server/api-plugins/v5/kv"
+	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"

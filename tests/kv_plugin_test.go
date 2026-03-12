@@ -322,7 +322,7 @@ func TestKVCreateToReopenWithPerms2(t *testing.T) {
 }
 
 func kvSetTest(t *testing.T) {
-	conn, err := net.Dial("tcp", "127.0.0.1:6001")
+	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 	// WorkerList contains a list of workers.
@@ -342,7 +342,7 @@ func kvSetTest(t *testing.T) {
 }
 
 func kvHasTest(t *testing.T) {
-	conn, err := net.Dial("tcp", "127.0.0.1:6001")
+	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
 	assert.NoError(t, err)
 	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 	// WorkerList contains a list of workers.
