@@ -205,9 +205,12 @@ func (r *rpc) TTL(in *kvv2.KvRequest, out *kvv2.KvResponse) error { //nolint:dup
 		item := &kvv2.KvItem{Key: k}
 		if ret[k] != "" {
 			t, err := time.Parse(time.RFC3339, ret[k])
-			if err == nil {
-				item.Ttl = durationpb.New(time.Until(t))
+			if err != nil {
+				span.RecordError(err)
+				return errors.E(op, err)
 			}
+
+			item.Ttl = durationpb.New(time.Until(t))
 		}
 		out.Items = append(out.Items, item)
 	}
