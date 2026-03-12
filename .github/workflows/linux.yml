@@ -51,7 +51,7 @@ jobs:
                  echo "Failed to start KV Docker container."
                  exit 1
           fi
-          go test -timeout 20m -v -race -cover -tags=debug -failfast -coverprofile=./coverage-ci/kv.out -covermode=atomic ./...
+          go test -timeout 20m -v -race -cover -tags=debug -failfast -coverprofile=./coverage-ci/kv.out -covermode=atomic -coverpkg=github.com/roadrunner-server/kv/v6/... ./...
           docker compose -f env/docker-compose-memcached.yaml down
 
       - name: Archive code coverage results
