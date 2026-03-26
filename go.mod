@@ -8,7 +8,7 @@ require (
 	github.com/roadrunner-server/api-go/v6 v6.0.0-beta.1
 	github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.1
 	github.com/roadrunner-server/endure/v2 v2.6.2
-	github.com/roadrunner-server/errors v1.4.1
+	github.com/roadrunner-server/errors v1.5.0
 	go.opentelemetry.io/otel/sdk v1.42.0
 	go.uber.org/zap v1.27.1
 	google.golang.org/protobuf v1.36.11
