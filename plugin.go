@@ -3,12 +3,12 @@ package kv
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	"go.uber.org/zap"
 )
 
 const (
@@ -33,12 +33,12 @@ type Tracer interface {
 }
 
 type Logger interface {
-	NamedLogger(name string) *zap.Logger
+	NamedLogger(name string) *slog.Logger
 }
 
 // Plugin for unified storage
 type Plugin struct {
-	log *zap.Logger
+	log *slog.Logger
 	// constructors contain general storage constructors, such as boltdb, memory, memcached, redis.
 	constructors map[string]kv.Constructor
 	// storages contain user-defined storages, such as boltdb-north, memcached-us and so on.
@@ -123,7 +123,7 @@ func (p *Plugin) Serve() chan error {
 					return errCh
 				}
 			default:
-				p.log.Warn("can't find local or global configuration, this section will be skipped", zap.String("local", configKey), zap.String("global", k))
+				p.log.Warn("can't find local or global configuration, this section will be skipped", "local", configKey, "global", k)
 
 				err := p.checkAndSaveStorage(ctx, drStr, k, "")
 				if err != nil {
