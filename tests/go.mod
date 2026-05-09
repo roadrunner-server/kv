@@ -6,15 +6,15 @@ toolchain go1.26.0
 
 require (
 	github.com/roadrunner-server/api-go/v6 v6.0.0-beta.4
-	github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.3
+	github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.4
 	github.com/roadrunner-server/config/v6 v6.0.0-beta.3
 	github.com/roadrunner-server/endure/v2 v2.6.2
 	github.com/roadrunner-server/goridge/v4 v4.0.0-beta.1
 	github.com/roadrunner-server/kv/v6 v6.0.0
 	github.com/roadrunner-server/logger/v6 v6.0.0-beta.3
-	github.com/roadrunner-server/memcached/v6 v6.0.0-beta.3
-	github.com/roadrunner-server/memory/v6 v6.0.0-beta.3
-	github.com/roadrunner-server/redis/v6 v6.0.0-beta.3
+	github.com/roadrunner-server/memcached/v6 v6.0.0-beta.4
+	github.com/roadrunner-server/memory/v6 v6.0.0-beta.4
+	github.com/roadrunner-server/redis/v6 v6.0.0-beta.4
 	github.com/roadrunner-server/rpc/v6 v6.0.0-beta.3
 	github.com/stretchr/testify v1.11.1
 )
