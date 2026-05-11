@@ -207,7 +207,7 @@ func (p *Plugin) Name() string {
 
 func (p *Plugin) RPC() (string, http.Handler) {
 	return kvV2connect.NewKvServiceHandler(&rpc{
-		storages: p.storages,
-		tracer:   p.tracer,
+		pl:     p,
+		tracer: p.tracer.Tracer(tracerName),
 	})
 }

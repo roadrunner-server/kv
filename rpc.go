@@ -10,7 +10,7 @@ import (
 	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
 	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/errors"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/protobuf/types/known/durationpb"
 )
 
@@ -22,26 +22,34 @@ var (
 )
 
 type rpc struct {
-	storages map[string]kv.Storage
-	tracer   *sdktrace.TracerProvider
+	pl     *Plugin
+	tracer trace.Tracer
 }
 
 func (r *rpc) lookupStorage(name string) (kv.Storage, error) {
 	if name == "" {
 		return nil, connect.NewError(connect.CodeInvalidArgument, errEmptyStorage)
 	}
-	st, ok := r.storages[name]
+	st, ok := r.pl.storages[name]
 	if !ok {
 		return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("%w: %s", errNoSuchStore, name))
 	}
 	return st, nil
 }
 
+func keysOf(items []*kvV2.KvItem) []string {
+	keys := make([]string, 0, len(items))
+	for _, it := range items {
+		keys = append(keys, it.GetKey())
+	}
+	return keys
+}
+
 func (r *rpc) Has(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
 	const op = errors.Op("rpc_has")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:has")
+	ctx, span := r.tracer.Start(ctx, "kv:has")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -50,10 +58,7 @@ func (r *rpc) Has(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 		return nil, err
 	}
 
-	keys := make([]string, 0, len(msg.GetItems()))
-	for i := range msg.GetItems() {
-		keys = append(keys, msg.GetItems()[i].GetKey())
-	}
+	keys := keysOf(msg.GetItems())
 
 	ret, err := st.Has(ctx, keys...)
 	if err != nil {
@@ -72,7 +77,7 @@ func (r *rpc) Set(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 	const op = errors.Op("rpc_set")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:set")
+	ctx, span := r.tracer.Start(ctx, "kv:set")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -92,7 +97,7 @@ func (r *rpc) MGet(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*
 	const op = errors.Op("rpc_mget")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:mget")
+	ctx, span := r.tracer.Start(ctx, "kv:mget")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -101,10 +106,7 @@ func (r *rpc) MGet(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*
 		return nil, err
 	}
 
-	keys := make([]string, 0, len(msg.GetItems()))
-	for i := range msg.GetItems() {
-		keys = append(keys, msg.GetItems()[i].GetKey())
-	}
+	keys := keysOf(msg.GetItems())
 
 	ret, err := st.MGet(ctx, keys...)
 	if err != nil {
@@ -123,7 +125,7 @@ func (r *rpc) MExpire(ctx context.Context, req *connect.Request[kvV2.KvRequest])
 	const op = errors.Op("rpc_mexpire")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:mexpire")
+	ctx, span := r.tracer.Start(ctx, "kv:mexpire")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -143,7 +145,7 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 	const op = errors.Op("rpc_ttl")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:ttl")
+	ctx, span := r.tracer.Start(ctx, "kv:ttl")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -152,10 +154,7 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 		return nil, err
 	}
 
-	keys := make([]string, 0, len(msg.GetItems()))
-	for i := range msg.GetItems() {
-		keys = append(keys, msg.GetItems()[i].GetKey())
-	}
+	keys := keysOf(msg.GetItems())
 
 	ret, err := st.TTL(ctx, keys...)
 	if err != nil {
@@ -187,7 +186,7 @@ func (r *rpc) Delete(ctx context.Context, req *connect.Request[kvV2.KvRequest]) 
 	const op = errors.Op("rpc_delete")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:delete")
+	ctx, span := r.tracer.Start(ctx, "kv:delete")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
@@ -196,10 +195,7 @@ func (r *rpc) Delete(ctx context.Context, req *connect.Request[kvV2.KvRequest]) 
 		return nil, err
 	}
 
-	keys := make([]string, 0, len(msg.GetItems()))
-	for i := range msg.GetItems() {
-		keys = append(keys, msg.GetItems()[i].GetKey())
-	}
+	keys := keysOf(msg.GetItems())
 
 	if err := st.Delete(ctx, keys...); err != nil {
 		span.RecordError(err)
@@ -212,7 +208,7 @@ func (r *rpc) Clear(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (
 	const op = errors.Op("rpc_clear")
 	msg := req.Msg
 
-	ctx, span := r.tracer.Tracer(tracerName).Start(ctx, "kv:clear")
+	ctx, span := r.tracer.Start(ctx, "kv:clear")
 	defer span.End()
 
 	st, err := r.lookupStorage(msg.GetStorage())
