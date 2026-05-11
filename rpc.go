@@ -45,6 +45,21 @@ func keysOf(items []*kvV2.KvItem) []string {
 	return keys
 }
 
+// internalErr wraps a storage-layer error with the appropriate Connect code.
+// Context cancellation/deadline are surfaced as their dedicated Connect codes
+// so clients can distinguish "you (or the network) canceled" from
+// "the server hit an unexpected error".
+func internalErr(op errors.Op, err error) error {
+	code := connect.CodeInternal
+	switch {
+	case stderr.Is(err, context.Canceled):
+		code = connect.CodeCanceled
+	case stderr.Is(err, context.DeadlineExceeded):
+		code = connect.CodeDeadlineExceeded
+	}
+	return connect.NewError(code, errors.E(op, err))
+}
+
 func (r *rpc) Has(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
 	const op = errors.Op("rpc_has")
 	msg := req.Msg
@@ -63,7 +78,7 @@ func (r *rpc) Has(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 	ret, err := st.Has(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 
 	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
@@ -88,7 +103,7 @@ func (r *rpc) Set(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 
 	if err := st.Set(ctx, from(msg.GetItems())...); err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 	return connect.NewResponse(&kvV2.KvResponse{}), nil
 }
@@ -111,7 +126,7 @@ func (r *rpc) MGet(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*
 	ret, err := st.MGet(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 
 	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
@@ -136,7 +151,7 @@ func (r *rpc) MExpire(ctx context.Context, req *connect.Request[kvV2.KvRequest])
 
 	if err := st.MExpire(ctx, from(msg.GetItems())...); err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 	return connect.NewResponse(&kvV2.KvResponse{}), nil
 }
@@ -159,7 +174,7 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 	ret, err := st.TTL(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 
 	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
@@ -169,7 +184,7 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 			t, err := time.Parse(time.RFC3339, ret[k])
 			if err != nil {
 				span.RecordError(err)
-				return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+				return nil, internalErr(op, err)
 			}
 			d := time.Until(t)
 			if d < 0 {
@@ -199,7 +214,7 @@ func (r *rpc) Delete(ctx context.Context, req *connect.Request[kvV2.KvRequest]) 
 
 	if err := st.Delete(ctx, keys...); err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 	return connect.NewResponse(&kvV2.KvResponse{}), nil
 }
@@ -219,7 +234,7 @@ func (r *rpc) Clear(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (
 
 	if err := st.Clear(ctx); err != nil {
 		span.RecordError(err)
-		return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
+		return nil, internalErr(op, err)
 	}
 	return connect.NewResponse(&kvV2.KvResponse{}), nil
 }
