@@ -4,30 +4,25 @@ rpc:
   listen: tcp://127.0.0.1:6001
 
 logs:
-  mode: development
   level: error
+  mode: development
 
 kv:
   default:
     driver: memory
-    config:
-      interval: 60
+    config: {}
 
   boltdb-south:
     driver: boltdb
     config:
-      dir: "."
       file: "rr.db"
-      bucket: "rr"
       permissions: 0666
       interval: 1
 
   boltdb-africa:
     driver: boltdb
     config:
-      dir: "."
       file: "africa.db"
-      bucket: "rr"
       permissions: 0666
       interval: 1
 
