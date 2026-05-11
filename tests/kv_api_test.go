@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"io"
 	"log/slog"
 	"net"
 	"net/http"
+	"net/url"
 	"sync"
 	"testing"
 	"time"
@@ -187,6 +189,58 @@ func TestKVHTTPApi(t *testing.T) {
 		Items:   []*kvV2.KvItem{{Key: key}},
 	}, &hasResp2)
 	require.Empty(t, hasResp2.GetItems())
+}
+
+// TestKVHTTPGetIdempotency verifies which methods accept HTTP GET. Read-only
+// methods (Has, MGet, TTL) are marked `option idempotency_level = NO_SIDE_EFFECTS;`
+// in the proto, so Connect generates a handler that accepts GET with the
+// request encoded in query params. Mutating methods stay POST-only, so GET
+// against them returns 405 Method Not Allowed.
+func TestKVHTTPGetIdempotency(t *testing.T) {
+	stop := startKvAPIContainer(t)
+	defer stop()
+
+	body, err := protojson.Marshal(&kvV2.KvRequest{
+		Storage: "in-memory",
+		Items:   []*kvV2.KvItem{{Key: "probe"}},
+	})
+	require.NoError(t, err)
+
+	q := url.Values{}
+	q.Set("encoding", "json")
+	q.Set("base64", "1")
+	q.Set("message", base64.URLEncoding.EncodeToString(body))
+
+	cases := []struct {
+		method     string
+		wantStatus int
+	}{
+		{"Has", http.StatusOK},
+		{"MGet", http.StatusOK},
+		{"TTL", http.StatusOK},
+		{"Set", http.StatusMethodNotAllowed},
+		{"MExpire", http.StatusMethodNotAllowed},
+		{"Delete", http.StatusMethodNotAllowed},
+		{"Clear", http.StatusMethodNotAllowed},
+	}
+
+	httpc := &http.Client{Timeout: 30 * time.Second}
+	for _, c := range cases {
+		t.Run(c.method, func(t *testing.T) {
+			req, err := http.NewRequestWithContext(t.Context(), http.MethodGet,
+				"http://"+kvAPIAddr+"/kv.v2.KvService/"+c.method+"?"+q.Encode(), nil)
+			require.NoError(t, err)
+
+			resp, err := httpc.Do(req)
+			require.NoError(t, err)
+			defer func() { _ = resp.Body.Close() }()
+
+			respBody, err := io.ReadAll(resp.Body)
+			require.NoError(t, err)
+			require.Equalf(t, c.wantStatus, resp.StatusCode,
+				"%s via GET -> %s\n%s", c.method, resp.Status, respBody)
+		})
+	}
 }
 
 // TestKVGRPCApi exercises the kv RPCs through a regular gRPC client
