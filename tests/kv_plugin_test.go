@@ -1,9 +1,11 @@
 package tests
 
 import (
+	"context"
+	"crypto/tls"
 	"log/slog"
 	"net"
-	"net/rpc"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
@@ -11,11 +13,12 @@ import (
 	"testing"
 	"time"
 
-	kvProto "github.com/roadrunner-server/api-go/v6/kv/v2"
+	"connectrpc.com/connect"
+	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
+	"github.com/roadrunner-server/api-go/v6/kv/v2/kvV2connect"
 	"github.com/roadrunner-server/boltdb/v6"
 	"github.com/roadrunner-server/config/v6"
 	"github.com/roadrunner-server/endure/v2"
-	goridgeRpc "github.com/roadrunner-server/goridge/v4/pkg/rpc"
 	"github.com/roadrunner-server/kv/v6"
 	"github.com/roadrunner-server/logger/v6"
 	"github.com/roadrunner-server/memcached/v6"
@@ -23,7 +26,20 @@ import (
 	"github.com/roadrunner-server/redis/v6"
 	rpcPlugin "github.com/roadrunner-server/rpc/v6"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/http2"
 )
+
+func newKvClient() kvV2connect.KvServiceClient {
+	httpc := &http.Client{
+		Transport: &http2.Transport{
+			AllowHTTP: true,
+			DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+				return new(net.Dialer).DialContext(ctx, network, addr)
+			},
+		},
+	}
+	return kvV2connect.NewKvServiceClient(httpc, "http://127.0.0.1:6001")
+}
 
 func TestKVInit(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
@@ -322,42 +338,23 @@ func TestKVCreateToReopenWithPerms2(t *testing.T) {
 }
 
 func kvSetTest(t *testing.T) {
-	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
-	assert.NoError(t, err)
-	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
-	// WorkerList contains a list of workers.
-	p := &kvProto.KvRequest{
+	resp, err := newKvClient().Set(t.Context(), connect.NewRequest(&kvV2.KvRequest{
 		Storage: "boltdb-south",
-		Items: []*kvProto.KvItem{
-			{
-				Key:   "key",
-				Value: []byte("val"),
-			},
+		Items: []*kvV2.KvItem{
+			{Key: "key", Value: []byte("val")},
 		},
-	}
-
-	resp := &kvProto.KvResponse{}
-	err = client.Call("kv.Set", p, resp)
+	}))
 	assert.NoError(t, err)
+	assert.NotNil(t, resp)
 }
 
 func kvHasTest(t *testing.T) {
-	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
-	assert.NoError(t, err)
-	client := rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
-	// WorkerList contains a list of workers.
-	p := &kvProto.KvRequest{
+	resp, err := newKvClient().Has(t.Context(), connect.NewRequest(&kvV2.KvRequest{
 		Storage: "boltdb-south",
-		Items: []*kvProto.KvItem{
-			{
-				Key:   "key",
-				Value: []byte("val"),
-			},
+		Items: []*kvV2.KvItem{
+			{Key: "key", Value: []byte("val")},
 		},
-	}
-
-	ret := &kvProto.KvResponse{}
-	err = client.Call("kv.Has", p, ret)
+	}))
 	assert.NoError(t, err)
-	assert.Len(t, ret.GetItems(), 1)
+	assert.Len(t, resp.Msg.GetItems(), 1)
 }
