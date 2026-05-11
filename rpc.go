@@ -3,6 +3,7 @@ package kv
 import (
 	"context"
 	stderr "errors"
+	"fmt"
 	"time"
 
 	"connectrpc.com/connect"
@@ -31,7 +32,7 @@ func (r *rpc) lookupStorage(name string) (kv.Storage, error) {
 	}
 	st, ok := r.storages[name]
 	if !ok {
-		return nil, connect.NewError(connect.CodeNotFound, errors.Errorf("%s: %s", errNoSuchStore.Error(), name))
+		return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("%w: %s", errNoSuchStore, name))
 	}
 	return st, nil
 }
@@ -171,7 +172,11 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 				span.RecordError(err)
 				return nil, connect.NewError(connect.CodeInternal, errors.E(op, err))
 			}
-			item.Ttl = durationpb.New(time.Until(t))
+			d := time.Until(t)
+			if d < 0 {
+				d = 0
+			}
+			item.Ttl = durationpb.New(d)
 		}
 		out.Items = append(out.Items, item)
 	}
