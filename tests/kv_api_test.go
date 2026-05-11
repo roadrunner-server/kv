@@ -1,8 +1,10 @@
 package tests
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
+	"io"
 	"log/slog"
 	"net"
 	"net/http"
@@ -23,6 +25,8 @@ import (
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 const kvAPIAddr = "127.0.0.1:6001"
@@ -70,9 +74,10 @@ func startKvAPIContainer(t *testing.T) func() {
 	}
 }
 
-// TestKVHTTPApi exercises Set/Has/Delete/Has over the Connect-RPC HTTP/2
-// cleartext wire — same shape PHP clients use.
-func TestKVHTTPApi(t *testing.T) {
+// TestKVConnectAPI exercises the kv RPCs through the Connect-RPC client
+// (h2c). This is the protocol used by Go callers that import the
+// generated kvV2connect package.
+func TestKVConnectAPI(t *testing.T) {
 	stop := startKvAPIContainer(t)
 	defer stop()
 
@@ -89,18 +94,16 @@ func TestKVHTTPApi(t *testing.T) {
 
 	const (
 		store = "in-memory"
-		key   = "http-key"
+		key   = "connect-key"
 	)
-	val := []byte("http-value")
+	val := []byte("connect-value")
 
-	// Set
 	_, err := client.Set(ctx, connect.NewRequest(&kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key, Value: val}},
 	}))
 	require.NoError(t, err)
 
-	// Has -> present
 	resp, err := client.Has(ctx, connect.NewRequest(&kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
@@ -109,14 +112,12 @@ func TestKVHTTPApi(t *testing.T) {
 	require.Len(t, resp.Msg.GetItems(), 1)
 	require.Equal(t, key, resp.Msg.GetItems()[0].GetKey())
 
-	// Delete
 	_, err = client.Delete(ctx, connect.NewRequest(&kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
 	}))
 	require.NoError(t, err)
 
-	// Has -> gone
 	resp, err = client.Has(ctx, connect.NewRequest(&kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
@@ -125,10 +126,72 @@ func TestKVHTTPApi(t *testing.T) {
 	require.Empty(t, resp.Msg.GetItems())
 }
 
-// TestKVGRPCApi exercises the same Set/Has/Delete/Has cycle using a regular
-// gRPC client (google.golang.org/grpc), not the Connect client. The same
-// rpc-plugin handler serves both protocols because Connect handlers register
-// gRPC bindings by default.
+// TestKVHTTPApi exercises the kv RPCs through plain HTTP/1.1 with a
+// protojson body — the wire shape PHP clients use via Guzzle/curl +
+// json_encode (PHP has no Connect SDK).
+func TestKVHTTPApi(t *testing.T) {
+	stop := startKvAPIContainer(t)
+	defer stop()
+
+	httpc := &http.Client{Timeout: 30 * time.Second}
+	ctx := t.Context()
+
+	call := func(method string, in proto.Message, out proto.Message) {
+		body, err := protojson.Marshal(in)
+		require.NoError(t, err)
+
+		req, err := http.NewRequestWithContext(ctx, http.MethodPost,
+			"http://"+kvAPIAddr+"/kv.v2.KvService/"+method, bytes.NewReader(body))
+		require.NoError(t, err)
+		req.Header.Set("Content-Type", "application/json")
+
+		resp, err := httpc.Do(req)
+		require.NoError(t, err)
+		defer func() { _ = resp.Body.Close() }()
+
+		respBody, err := io.ReadAll(resp.Body)
+		require.NoError(t, err)
+		require.Equalf(t, http.StatusOK, resp.StatusCode, "method=%s body=%s", method, respBody)
+		require.NoError(t, protojson.Unmarshal(respBody, out))
+	}
+
+	const (
+		store = "in-memory"
+		key   = "http-key"
+	)
+	val := []byte("http-value")
+
+	var setResp kvV2.KvResponse
+	call("Set", &kvV2.KvRequest{
+		Storage: store,
+		Items:   []*kvV2.KvItem{{Key: key, Value: val}},
+	}, &setResp)
+
+	var hasResp kvV2.KvResponse
+	call("Has", &kvV2.KvRequest{
+		Storage: store,
+		Items:   []*kvV2.KvItem{{Key: key}},
+	}, &hasResp)
+	require.Len(t, hasResp.GetItems(), 1)
+	require.Equal(t, key, hasResp.GetItems()[0].GetKey())
+
+	var delResp kvV2.KvResponse
+	call("Delete", &kvV2.KvRequest{
+		Storage: store,
+		Items:   []*kvV2.KvItem{{Key: key}},
+	}, &delResp)
+
+	var hasResp2 kvV2.KvResponse
+	call("Has", &kvV2.KvRequest{
+		Storage: store,
+		Items:   []*kvV2.KvItem{{Key: key}},
+	}, &hasResp2)
+	require.Empty(t, hasResp2.GetItems())
+}
+
+// TestKVGRPCApi exercises the kv RPCs through a regular gRPC client
+// (google.golang.org/grpc). The same Connect handler serves gRPC framing
+// off the same port — this is what the PHP gRPC extension talks to.
 func TestKVGRPCApi(t *testing.T) {
 	stop := startKvAPIContainer(t)
 	defer stop()
@@ -147,14 +210,12 @@ func TestKVGRPCApi(t *testing.T) {
 	)
 	val := []byte("grpc-value")
 
-	// Set
 	_, err = client.Set(ctx, &kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key, Value: val}},
 	})
 	require.NoError(t, err)
 
-	// Has -> present
 	hasResp, err := client.Has(ctx, &kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
@@ -163,14 +224,12 @@ func TestKVGRPCApi(t *testing.T) {
 	require.Len(t, hasResp.GetItems(), 1)
 	require.Equal(t, key, hasResp.GetItems()[0].GetKey())
 
-	// Delete
 	_, err = client.Delete(ctx, &kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
 	})
 	require.NoError(t, err)
 
-	// Has -> gone
 	hasResp, err = client.Has(ctx, &kvV2.KvRequest{
 		Storage: store,
 		Items:   []*kvV2.KvItem{{Key: key}},
