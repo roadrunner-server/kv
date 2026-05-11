@@ -1,0 +1,13 @@
+version: '3'
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+logs:
+  level: error
+  mode: development
+
+kv:
+  in-memory:
+    driver: memory
+    config: {}
