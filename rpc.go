@@ -181,10 +181,7 @@ func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*c
 				span.RecordError(err)
 				return nil, internalErr(op, err)
 			}
-			d := time.Until(t)
-			if d < 0 {
-				d = 0
-			}
+			d := max(time.Until(t), 0)
 			item.Ttl = durationpb.New(d)
 		}
 		out.Items = append(out.Items, item)
