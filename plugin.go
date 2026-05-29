@@ -81,6 +81,8 @@ func (p *Plugin) Serve() chan error {
 	// For this config we should have 3 constructors: memory, boltdb and memcached but 4 KVs: default, boltdb-south, boltdb-north and memcached
 	// when user requests, for example, boltdb-south, we should provide that particular pre-configured storage
 
+	ctx := context.Background()
+
 	for k, v := range p.cfg.Data {
 		// for example, if the key didn't properly format (yaml)
 		if v == nil {
@@ -89,52 +91,53 @@ func (p *Plugin) Serve() chan error {
 
 		// check type of the v
 		// should be a map[string]any
-		switch t := v.(type) {
-		// correct type
-		case map[string]any:
-			if _, ok := t[driver]; !ok {
-				errCh <- errors.E(op, errors.Errorf("could not find mandatory driver field in the %s storage", k))
-				return errCh
-			}
-		default:
+		t, ok := v.(map[string]any)
+		if !ok {
 			p.log.Warn("wrong type detected in the configuration, please, check yaml indentation")
 			continue
+		}
+
+		if _, ok := t[driver]; !ok {
+			errCh <- errors.E(op, errors.Errorf("could not find mandatory driver field in the %s storage", k))
+			return errCh
 		}
 
 		// config key for the particular sub-driver kv.memcached.config
 		configKey := fmt.Sprintf("%s.%s.%s", PluginName, k, cfg)
 		// at this point we know, that driver field present in the configuration
-		drName := v.(map[string]any)[driver]
-		ctx := context.Background()
+		drName := t[driver]
 
 		// driver name should be a string
-		if drStr, ok := drName.(string); ok {
-			switch {
-			// local configuration section key
-			case p.cfgPlugin.Has(configKey):
-				err := p.checkAndSaveStorage(ctx, drStr, k, configKey)
-				if err != nil {
-					errCh <- errors.E(op, err)
-					return errCh
-				}
-				// try global then
-			case p.cfgPlugin.Has(k):
-				err := p.checkAndSaveStorage(ctx, drStr, k, k)
-				if err != nil {
-					errCh <- errors.E(op, err)
-					return errCh
-				}
-			default:
-				p.log.Warn("can't find local or global configuration, this section will be skipped", "local", configKey, "global", k)
+		drStr, ok := drName.(string)
+		if !ok {
+			p.log.Warn("driver field is not a string, skipping storage", "storage", k, "driver_type", fmt.Sprintf("%T", drName))
+			continue
+		}
 
-				err := p.checkAndSaveStorage(ctx, drStr, k, "")
-				if err != nil {
-					errCh <- errors.E(op, err)
-					return errCh
-				}
+		switch {
+		// local configuration section key
+		case p.cfgPlugin.Has(configKey):
+			err := p.checkAndSaveStorage(ctx, drStr, k, configKey)
+			if err != nil {
+				errCh <- errors.E(op, err)
+				return errCh
+			}
+			// try global then
+		case p.cfgPlugin.Has(k):
+			err := p.checkAndSaveStorage(ctx, drStr, k, k)
+			if err != nil {
+				errCh <- errors.E(op, err)
+				return errCh
+			}
+		default:
+			p.log.Warn("can't find local or global configuration, this section will be skipped", "local", configKey, "global", k)
+
+			err := p.checkAndSaveStorage(ctx, drStr, k, "")
+			if err != nil {
+				errCh <- errors.E(op, err)
+				return errCh
 			}
 		}
-		continue
 	}
 
 	return errCh
@@ -170,13 +173,8 @@ func (p *Plugin) Stop(ctx context.Context) error {
 			p.storages[k].Stop(ctx)
 		}
 
-		for k := range p.storages {
-			delete(p.storages, k)
-		}
-
-		for k := range p.constructors {
-			delete(p.constructors, k)
-		}
+		clear(p.storages)
+		clear(p.constructors)
 		stopCh <- struct{}{}
 	}()
 
