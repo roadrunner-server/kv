@@ -93,7 +93,7 @@ func (p *Plugin) Serve() chan error {
 		// should be a map[string]any
 		t, ok := v.(map[string]any)
 		if !ok {
-			p.log.Warn("wrong type detected in the configuration, please, check yaml indentation")
+			p.log.Warn("wrong type detected in the configuration, please, check yaml indentation", "storage", k)
 			continue
 		}
 
