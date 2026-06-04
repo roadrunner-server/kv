@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log/slog"
+	"slices"
 	"strings"
 	"sync"
 	"testing"
@@ -60,12 +61,9 @@ func (h *capHandler) WithGroup(string) slog.Handler      { return h }
 func (h *capHandler) hasWarn(sub string) bool {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	for i := range h.records {
-		if h.records[i].Level == slog.LevelWarn && strings.Contains(h.records[i].Message, sub) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(h.records, func(r slog.Record) bool {
+		return r.Level == slog.LevelWarn && strings.Contains(r.Message, sub)
+	})
 }
 
 // mockLogger satisfies kv.Logger.
