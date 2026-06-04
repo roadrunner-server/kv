@@ -10,6 +10,7 @@ require (
 	github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.4
 	github.com/roadrunner-server/config/v6 v6.0.0-beta.3
 	github.com/roadrunner-server/endure/v2 v2.6.2
+	github.com/roadrunner-server/errors v1.5.0
 	github.com/roadrunner-server/kv/v6 v6.0.0
 	github.com/roadrunner-server/logger/v6 v6.0.0-beta.3
 	github.com/roadrunner-server/memcached/v6 v6.0.0-beta.4
@@ -51,7 +52,6 @@ require (
 	github.com/redis/go-redis/extra/redisprometheus/v9 v9.19.0 // indirect
 	github.com/redis/go-redis/v9 v9.19.0 // indirect
 	github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.2 // indirect
-	github.com/roadrunner-server/errors v1.5.0 // indirect
 	github.com/roadrunner-server/tcplisten v1.5.2 // indirect
 	github.com/sagikazarmark/locafero v0.12.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect

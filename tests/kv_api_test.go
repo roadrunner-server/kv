@@ -29,6 +29,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
 
 const kvAPIAddr = "127.0.0.1:6001"
@@ -290,4 +291,60 @@ func TestKVGRPCApi(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.Empty(t, hasResp.GetItems())
+}
+
+// TestKVRPCExtra covers rpc.go paths the happy-path API tests miss: the two
+// lookupStorage error returns, and the MExpire/Clear handlers (only ever probed
+// via GET-405 elsewhere, which never reaches the handler). All subtests share a
+// single container.
+func TestKVRPCExtra(t *testing.T) {
+	stop := startKvAPIContainer(t)
+	defer stop()
+
+	client := newKvClient()
+	ctx := t.Context()
+
+	t.Run("UnknownStorageNotFound", func(t *testing.T) {
+		_, err := client.Has(ctx, connect.NewRequest(&kvV2.KvRequest{
+			Storage: "does-not-exist",
+			Items:   []*kvV2.KvItem{{Key: "k"}},
+		}))
+		require.Error(t, err)
+		require.Equal(t, connect.CodeNotFound, connect.CodeOf(err))
+	})
+
+	t.Run("EmptyStorageInvalidArgument", func(t *testing.T) {
+		_, err := client.Has(ctx, connect.NewRequest(&kvV2.KvRequest{
+			Storage: "",
+			Items:   []*kvV2.KvItem{{Key: "k"}},
+		}))
+		require.Error(t, err)
+		require.Equal(t, connect.CodeInvalidArgument, connect.CodeOf(err))
+	})
+
+	t.Run("MExpireThenClear", func(t *testing.T) {
+		const store = "in-memory"
+
+		_, err := client.Set(ctx, connect.NewRequest(&kvV2.KvRequest{
+			Storage: store,
+			Items:   []*kvV2.KvItem{{Key: "exp", Value: []byte("v")}},
+		}))
+		require.NoError(t, err)
+
+		_, err = client.MExpire(ctx, connect.NewRequest(&kvV2.KvRequest{
+			Storage: store,
+			Items:   []*kvV2.KvItem{{Key: "exp", Ttl: durationpb.New(60 * time.Second)}},
+		}))
+		require.NoError(t, err)
+
+		_, err = client.Clear(ctx, connect.NewRequest(&kvV2.KvRequest{Storage: store}))
+		require.NoError(t, err)
+
+		resp, err := client.Has(ctx, connect.NewRequest(&kvV2.KvRequest{
+			Storage: store,
+			Items:   []*kvV2.KvItem{{Key: "exp"}},
+		}))
+		require.NoError(t, err)
+		require.Empty(t, resp.Msg.GetItems())
+	})
 }
