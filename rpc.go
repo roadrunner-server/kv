@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"connectrpc.com/connect"
 	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
 	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/errors"
@@ -28,11 +27,11 @@ type rpc struct {
 
 func (r *rpc) lookupStorage(name string) (kv.Storage, error) {
 	if name == "" {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errEmptyStorage)
+		return nil, errEmptyStorage
 	}
 	st, ok := r.pl.storages[name]
 	if !ok {
-		return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("%w: %s", errNoSuchStore, name))
+		return nil, fmt.Errorf("%w: %s", errNoSuchStore, name)
 	}
 	return st, nil
 }
@@ -45,188 +44,173 @@ func keysOf(items []*kvV2.KvItem) []string {
 	return keys
 }
 
-// internalErr wraps a storage-layer error with the appropriate Connect code.
-// Context cancellation/deadline are surfaced as their dedicated Connect codes
-// so clients can distinguish "you (or the network) canceled" from
-// "the server hit an unexpected error".
-func internalErr(op errors.Op, err error) error {
-	code := connect.CodeInternal
-	switch {
-	case stderr.Is(err, context.Canceled):
-		code = connect.CodeCanceled
-	case stderr.Is(err, context.DeadlineExceeded):
-		code = connect.CodeDeadlineExceeded
-	}
-	return connect.NewError(code, errors.E(op, err))
-}
-
-func (r *rpc) Has(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) Has(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_has")
 
-	ctx, span := r.tracer.Start(ctx, "kv:has")
+	ctx, span := r.tracer.Start(context.Background(), "kv:has")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	keys := keysOf(req.Msg.GetItems())
+	keys := keysOf(in.GetItems())
 
 	ret, err := st.Has(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
 
-	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
+	out.Items = make([]*kvV2.KvItem, 0, len(ret))
 	for k := range ret {
 		out.Items = append(out.Items, &kvV2.KvItem{Key: k})
 	}
-	return connect.NewResponse(out), nil
+	return nil
 }
 
-func (r *rpc) Set(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) Set(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_set")
 
-	ctx, span := r.tracer.Start(ctx, "kv:set")
+	ctx, span := r.tracer.Start(context.Background(), "kv:set")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	if err := st.Set(ctx, from(req.Msg.GetItems())...); err != nil {
+	if err := st.Set(ctx, from(in.GetItems())...); err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
-	return connect.NewResponse(&kvV2.KvResponse{}), nil
+	return nil
 }
 
-func (r *rpc) MGet(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) MGet(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_mget")
 
-	ctx, span := r.tracer.Start(ctx, "kv:mget")
+	ctx, span := r.tracer.Start(context.Background(), "kv:mget")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	keys := keysOf(req.Msg.GetItems())
+	keys := keysOf(in.GetItems())
 
 	ret, err := st.MGet(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
 
-	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
+	out.Items = make([]*kvV2.KvItem, 0, len(ret))
 	for k := range ret {
 		out.Items = append(out.Items, &kvV2.KvItem{Key: k, Value: ret[k]})
 	}
-	return connect.NewResponse(out), nil
+	return nil
 }
 
-func (r *rpc) MExpire(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) MExpire(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_mexpire")
 
-	ctx, span := r.tracer.Start(ctx, "kv:mexpire")
+	ctx, span := r.tracer.Start(context.Background(), "kv:mexpire")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	if err := st.MExpire(ctx, from(req.Msg.GetItems())...); err != nil {
+	if err := st.MExpire(ctx, from(in.GetItems())...); err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
-	return connect.NewResponse(&kvV2.KvResponse{}), nil
+	return nil
 }
 
-func (r *rpc) TTL(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) TTL(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_ttl")
 
-	ctx, span := r.tracer.Start(ctx, "kv:ttl")
+	ctx, span := r.tracer.Start(context.Background(), "kv:ttl")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	keys := keysOf(req.Msg.GetItems())
+	keys := keysOf(in.GetItems())
 
 	ret, err := st.TTL(ctx, keys...)
 	if err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
 
-	out := &kvV2.KvResponse{Items: make([]*kvV2.KvItem, 0, len(ret))}
+	out.Items = make([]*kvV2.KvItem, 0, len(ret))
 	for k := range ret {
 		item := &kvV2.KvItem{Key: k}
 		if ret[k] != "" {
 			t, err := time.Parse(time.RFC3339, ret[k])
 			if err != nil {
 				span.RecordError(err)
-				return nil, internalErr(op, err)
+				return errors.E(op, err)
 			}
 			d := max(time.Until(t), 0)
 			item.Ttl = durationpb.New(d)
 		}
 		out.Items = append(out.Items, item)
 	}
-	return connect.NewResponse(out), nil
+	return nil
 }
 
-func (r *rpc) Delete(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) Delete(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_delete")
 
-	ctx, span := r.tracer.Start(ctx, "kv:delete")
+	ctx, span := r.tracer.Start(context.Background(), "kv:delete")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
-	keys := keysOf(req.Msg.GetItems())
+	keys := keysOf(in.GetItems())
 
 	if err := st.Delete(ctx, keys...); err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
-	return connect.NewResponse(&kvV2.KvResponse{}), nil
+	return nil
 }
 
-func (r *rpc) Clear(ctx context.Context, req *connect.Request[kvV2.KvRequest]) (*connect.Response[kvV2.KvResponse], error) {
+func (r *rpc) Clear(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	const op = errors.Op("rpc_clear")
 
-	ctx, span := r.tracer.Start(ctx, "kv:clear")
+	ctx, span := r.tracer.Start(context.Background(), "kv:clear")
 	defer span.End()
 
-	st, err := r.lookupStorage(req.Msg.GetStorage())
+	st, err := r.lookupStorage(in.GetStorage())
 	if err != nil {
 		span.RecordError(err)
-		return nil, err
+		return err
 	}
 
 	if err := st.Clear(ctx); err != nil {
 		span.RecordError(err)
-		return nil, internalErr(op, err)
+		return errors.E(op, err)
 	}
-	return connect.NewResponse(&kvV2.KvResponse{}), nil
+	return nil
 }
 
 func from(tr []*kvV2.KvItem) []kv.Item {
