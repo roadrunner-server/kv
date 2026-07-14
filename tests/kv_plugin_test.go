@@ -28,7 +28,7 @@ import (
 
 func newKvClient(t *testing.T) *rpc.Client {
 	t.Helper()
-	conn, err := (&net.Dialer{}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
+	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
 	require.NoError(t, err)
 	return rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 }
