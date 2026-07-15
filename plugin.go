@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http"
 
-	"github.com/roadrunner-server/api-go/v6/kv/v2/kvV2connect"
 	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/endure/v2/dep"
 	"github.com/roadrunner-server/errors"
@@ -203,9 +201,9 @@ func (p *Plugin) Name() string {
 	return PluginName
 }
 
-func (p *Plugin) RPC() (string, http.Handler) {
-	return kvV2connect.NewKvServiceHandler(&rpc{
+func (p *Plugin) RPC() any {
+	return &rpc{
 		pl:     p,
 		tracer: p.tracer.Tracer(tracerName),
-	})
+	}
 }

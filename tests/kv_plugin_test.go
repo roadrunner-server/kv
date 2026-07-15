@@ -1,11 +1,9 @@
 package tests
 
 import (
-	"context"
-	"crypto/tls"
 	"log/slog"
 	"net"
-	"net/http"
+	"net/rpc"
 	"os"
 	"os/signal"
 	"sync"
@@ -13,12 +11,11 @@ import (
 	"testing"
 	"time"
 
-	"connectrpc.com/connect"
 	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
-	"github.com/roadrunner-server/api-go/v6/kv/v2/kvV2connect"
 	"github.com/roadrunner-server/boltdb/v6"
 	"github.com/roadrunner-server/config/v6"
 	"github.com/roadrunner-server/endure/v2"
+	goridgeRpc "github.com/roadrunner-server/goridge/v4/pkg/rpc"
 	"github.com/roadrunner-server/kv/v6"
 	"github.com/roadrunner-server/logger/v6"
 	"github.com/roadrunner-server/memcached/v6"
@@ -26,20 +23,14 @@ import (
 	"github.com/roadrunner-server/redis/v6"
 	rpcPlugin "github.com/roadrunner-server/rpc/v6"
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/net/http2"
+	"github.com/stretchr/testify/require"
 )
 
-func newKvClient() kvV2connect.KvServiceClient {
-	dialer := &net.Dialer{Timeout: 30 * time.Second}
-	httpc := &http.Client{
-		Transport: &http2.Transport{
-			AllowHTTP: true,
-			DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
-				return dialer.DialContext(ctx, network, addr)
-			},
-		},
-	}
-	return kvV2connect.NewKvServiceClient(httpc, "http://127.0.0.1:6001")
+func newKvClient(t *testing.T) *rpc.Client {
+	t.Helper()
+	conn, err := (&net.Dialer{Timeout: time.Second * 30}).DialContext(t.Context(), "tcp", "127.0.0.1:6001")
+	require.NoError(t, err)
+	return rpc.NewClientWithCodec(goridgeRpc.NewClientCodec(conn))
 }
 
 func TestKVInit(t *testing.T) {
@@ -331,23 +322,30 @@ func TestKVCreateToReopenWithPerms2(t *testing.T) {
 }
 
 func kvSetTest(t *testing.T) {
-	resp, err := newKvClient().Set(t.Context(), connect.NewRequest(&kvV2.KvRequest{
+	client := newKvClient(t)
+	defer func() { _ = client.Close() }()
+
+	var out kvV2.KvResponse
+	err := client.Call("kv.Set", &kvV2.KvRequest{
 		Storage: "boltdb-south",
 		Items: []*kvV2.KvItem{
 			{Key: "key", Value: []byte("val")},
 		},
-	}))
+	}, &out)
 	assert.NoError(t, err)
-	assert.NotNil(t, resp)
 }
 
 func kvHasTest(t *testing.T) {
-	resp, err := newKvClient().Has(t.Context(), connect.NewRequest(&kvV2.KvRequest{
+	client := newKvClient(t)
+	defer func() { _ = client.Close() }()
+
+	var out kvV2.KvResponse
+	err := client.Call("kv.Has", &kvV2.KvRequest{
 		Storage: "boltdb-south",
 		Items: []*kvV2.KvItem{
 			{Key: "key", Value: []byte("val")},
 		},
-	}))
+	}, &out)
 	assert.NoError(t, err)
-	assert.Len(t, resp.Msg.GetItems(), 1)
+	assert.Len(t, out.GetItems(), 1)
 }
