@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
+	kvV1 "github.com/roadrunner-server/api-go/v6/kv/v1"
 	"github.com/roadrunner-server/boltdb/v6"
 	"github.com/roadrunner-server/config/v6"
 	"github.com/roadrunner-server/endure/v2"
@@ -325,10 +325,10 @@ func kvSetTest(t *testing.T) {
 	client := newKvClient(t)
 	defer func() { _ = client.Close() }()
 
-	var out kvV2.KvResponse
-	err := client.Call("kv.Set", &kvV2.KvRequest{
+	var out kvV1.Response
+	err := client.Call("kv.Set", &kvV1.Request{
 		Storage: "boltdb-south",
-		Items: []*kvV2.KvItem{
+		Items: []*kvV1.Item{
 			{Key: "key", Value: []byte("val")},
 		},
 	}, &out)
@@ -339,10 +339,10 @@ func kvHasTest(t *testing.T) {
 	client := newKvClient(t)
 	defer func() { _ = client.Close() }()
 
-	var out kvV2.KvResponse
-	err := client.Call("kv.Has", &kvV2.KvRequest{
+	var out kvV1.Response
+	err := client.Call("kv.Has", &kvV1.Request{
 		Storage: "boltdb-south",
-		Items: []*kvV2.KvItem{
+		Items: []*kvV1.Item{
 			{Key: "key", Value: []byte("val")},
 		},
 	}, &out)

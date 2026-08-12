@@ -4,13 +4,11 @@ import (
 	"context"
 	stderr "errors"
 	"fmt"
-	"time"
 
-	kvV2 "github.com/roadrunner-server/api-go/v6/kv/v2"
+	kvV1 "github.com/roadrunner-server/api-go/v6/kv/v1"
 	"github.com/roadrunner-server/api-plugins/v6/kv"
 	"github.com/roadrunner-server/errors"
 	"go.opentelemetry.io/otel/trace"
-	"google.golang.org/protobuf/types/known/durationpb"
 )
 
 const tracerName = "kv"
@@ -36,7 +34,7 @@ func (r *rpc) lookupStorage(name string) (kv.Storage, error) {
 	return st, nil
 }
 
-func keysOf(items []*kvV2.KvItem) []string {
+func keysOf(items []*kvV1.Item) []string {
 	keys := make([]string, 0, len(items))
 	for _, it := range items {
 		keys = append(keys, it.GetKey())
@@ -44,7 +42,7 @@ func keysOf(items []*kvV2.KvItem) []string {
 	return keys
 }
 
-func (r *rpc) Has(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
+func (r *rpc) Has(in *kvV1.Request, out *kvV1.Response) error {
 	const op = errors.Op("rpc_has")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:has")
@@ -64,14 +62,14 @@ func (r *rpc) Has(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 		return errors.E(op, err)
 	}
 
-	out.Items = make([]*kvV2.KvItem, 0, len(ret))
+	out.Items = make([]*kvV1.Item, 0, len(ret))
 	for k := range ret {
-		out.Items = append(out.Items, &kvV2.KvItem{Key: k})
+		out.Items = append(out.Items, &kvV1.Item{Key: k})
 	}
 	return nil
 }
 
-func (r *rpc) Set(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
+func (r *rpc) Set(in *kvV1.Request, _ *kvV1.Response) error {
 	const op = errors.Op("rpc_set")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:set")
@@ -90,7 +88,7 @@ func (r *rpc) Set(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	return nil
 }
 
-func (r *rpc) MGet(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
+func (r *rpc) MGet(in *kvV1.Request, out *kvV1.Response) error {
 	const op = errors.Op("rpc_mget")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:mget")
@@ -110,14 +108,14 @@ func (r *rpc) MGet(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 		return errors.E(op, err)
 	}
 
-	out.Items = make([]*kvV2.KvItem, 0, len(ret))
+	out.Items = make([]*kvV1.Item, 0, len(ret))
 	for k := range ret {
-		out.Items = append(out.Items, &kvV2.KvItem{Key: k, Value: ret[k]})
+		out.Items = append(out.Items, &kvV1.Item{Key: k, Value: ret[k]})
 	}
 	return nil
 }
 
-func (r *rpc) MExpire(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
+func (r *rpc) MExpire(in *kvV1.Request, _ *kvV1.Response) error {
 	const op = errors.Op("rpc_mexpire")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:mexpire")
@@ -136,7 +134,7 @@ func (r *rpc) MExpire(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	return nil
 }
 
-func (r *rpc) TTL(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
+func (r *rpc) TTL(in *kvV1.Request, out *kvV1.Response) error {
 	const op = errors.Op("rpc_ttl")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:ttl")
@@ -156,24 +154,14 @@ func (r *rpc) TTL(in *kvV2.KvRequest, out *kvV2.KvResponse) error {
 		return errors.E(op, err)
 	}
 
-	out.Items = make([]*kvV2.KvItem, 0, len(ret))
+	out.Items = make([]*kvV1.Item, 0, len(ret))
 	for k := range ret {
-		item := &kvV2.KvItem{Key: k}
-		if ret[k] != "" {
-			t, err := time.Parse(time.RFC3339, ret[k])
-			if err != nil {
-				span.RecordError(err)
-				return errors.E(op, err)
-			}
-			d := max(time.Until(t), 0)
-			item.Ttl = durationpb.New(d)
-		}
-		out.Items = append(out.Items, item)
+		out.Items = append(out.Items, &kvV1.Item{Key: k, Timeout: ret[k]})
 	}
 	return nil
 }
 
-func (r *rpc) Delete(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
+func (r *rpc) Delete(in *kvV1.Request, _ *kvV1.Response) error {
 	const op = errors.Op("rpc_delete")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:delete")
@@ -194,7 +182,7 @@ func (r *rpc) Delete(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	return nil
 }
 
-func (r *rpc) Clear(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
+func (r *rpc) Clear(in *kvV1.Request, _ *kvV1.Response) error {
 	const op = errors.Op("rpc_clear")
 
 	ctx, span := r.tracer.Start(context.Background(), "kv:clear")
@@ -213,17 +201,13 @@ func (r *rpc) Clear(in *kvV2.KvRequest, _ *kvV2.KvResponse) error {
 	return nil
 }
 
-func from(tr []*kvV2.KvItem) []kv.Item {
+func from(tr []*kvV1.Item) []kv.Item {
 	items := make([]kv.Item, 0, len(tr))
 	for i := range tr {
-		var timeout string
-		if ttl := tr[i].GetTtl(); ttl != nil {
-			timeout = time.Now().Add(ttl.AsDuration()).Format(time.RFC3339)
-		}
 		items = append(items, &Item{
 			key:     tr[i].GetKey(),
 			val:     tr[i].GetValue(),
-			timeout: timeout,
+			timeout: tr[i].GetTimeout(),
 		})
 	}
 	return items
