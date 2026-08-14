@@ -35,30 +35,27 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: ${{ runner.os }}-go-
 
+      - name: Create folders
+        run: |
+          mkdir ./tests/coverage-ci
+
       - name: Install Go dependencies
         run: go mod download
+
+      - name: Run KV unit tests with coverage
+        run: |
+          go test -timeout 20m -v -race -cover -tags=debug -coverpkg=./... -coverprofile=./tests/coverage-ci/kvu.out -covermode=atomic ./...
 
       - name: Run golang tests with coverage
         run: |
           cd tests
-          mkdir ./coverage-ci
-
-          docker compose -f env/docker-compose-memcached.yaml up -d
-          sleep 30
-          if [ "$(docker ps -q -f status=running -f name=memcached_1)" ]; then
-          echo "KV Docker container started successfully."
-             else
-                 echo "Failed to start KV Docker container."
-                 exit 1
-          fi
-          go test -timeout 20m -v -race -cover -tags=debug -failfast -coverprofile=./coverage-ci/kv.out -covermode=atomic -coverpkg=github.com/roadrunner-server/kv/v6/... ./...
-          docker compose -f env/docker-compose-memcached.yaml down
+          go test -timeout 20m -v -race -cover -tags=debug -coverprofile=./coverage-ci/kv.out -covermode=atomic -coverpkg=github.com/roadrunner-server/kv/v6/... ./...
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v7
         with:
           name: coverage-kv
-          path: ./tests/coverage-ci/kv.out
+          path: ./tests/coverage-ci
 
   codecov:
     name: Upload codecov
