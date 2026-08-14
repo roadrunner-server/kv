@@ -2,7 +2,7 @@ module tests
 
 go 1.26
 
-toolchain go1.26.5
+toolchain go1.26.6
 
 require (
 	github.com/roadrunner-server/api-go/v6 v6.0.0-beta.14
