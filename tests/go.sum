@@ -35,8 +35,8 @@ github.com/roadrunner-server/api-go/v6 v6.0.0-beta.14 h1:sTskv/3ImOZlUdtHuj9uT24
 github.com/roadrunner-server/api-go/v6 v6.0.0-beta.14/go.mod h1:Y4rsabWjr4Y10Jg6H8J5NDitQqlnXmGhCdgR+zyLYkI=
 github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.2 h1:GqsZzWQ5jMXRF1O/b8IqFz9PLpS7Ui0K4OyACLql2MI=
 github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.2/go.mod h1:2v4yUK5Kvbvq8C3IkDoBkuamq9h+7i/JLjyf7k1j5JM=
-github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.4 h1:cDzFTrC/Gi1rm+9fzdW/lRTTM3jY1Hw0NHbZaUBBc1I=
-github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.4/go.mod h1:rqHKWOe6MKh4Dqvu7Pm1R1Mz8LjvmkDre9s8S04MvrE=
+github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.5 h1:Rr1kfQppf64kUb+PGXHkSmvyBHF7EcqQh+OLJao5tFI=
+github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.5/go.mod h1:SIfFwXQ5YxsHKfGl2i0F5WN3ZOI6X2D66wPjrRV6kYc=
 github.com/roadrunner-server/config/v6 v6.0.0-beta.3 h1:G0EUzJ6Yw4UnleM6BhnOBbYPXKDHRmCJiGhC3nXDBwI=
 github.com/roadrunner-server/config/v6 v6.0.0-beta.3/go.mod h1:eIB+c29njpcKokXrxe483FbQOBSTNGvU3hhC6W/qYSU=
 github.com/roadrunner-server/endure/v2 v2.6.2 h1:sIB4kTyE7gtT3fDhuYWUYn6Vt/dcPtiA6FoNS1eS+84=
