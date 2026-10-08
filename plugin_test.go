@@ -59,6 +59,7 @@ func TestPluginServeBranches(t *testing.T) {
 		errSubs      []string // substrings the Serve error must contain
 		warnSub      string   // substring of a warn record, when non-empty
 		wantStorages []string
+		wantCfgKeys  []string
 	}{
 		{
 			name: "nil value is skipped",
@@ -103,6 +104,7 @@ func TestPluginServeBranches(t *testing.T) {
 			has:         map[string]bool{"s": true},
 			constructor: &fakeConstructor{name: "fake", err: stderr.New("driver is unhappy")},
 			errSubs:     []string{"kv_plugin_serve", "driver is unhappy"},
+			wantCfgKeys: []string{"s"},
 		},
 		{
 			name:         "storage is filed under its config name",
@@ -110,6 +112,31 @@ func TestPluginServeBranches(t *testing.T) {
 			has:          map[string]bool{"s": true},
 			constructor:  &fakeConstructor{name: "fake"},
 			wantStorages: []string{"s"},
+			wantCfgKeys:  []string{"s"},
+		},
+		{
+			name:         "local config is passed to the constructor",
+			data:         map[string]any{"s": map[string]any{"driver": "fake"}},
+			has:          map[string]bool{"kv.s.config": true},
+			constructor:  &fakeConstructor{name: "fake"},
+			wantStorages: []string{"s"},
+			wantCfgKeys:  []string{"kv.s.config"},
+		},
+		{
+			name:         "local config has priority over global config",
+			data:         map[string]any{"s": map[string]any{"driver": "fake"}},
+			has:          map[string]bool{"kv.s.config": true, "s": true},
+			constructor:  &fakeConstructor{name: "fake"},
+			wantStorages: []string{"s"},
+			wantCfgKeys:  []string{"kv.s.config"},
+		},
+		{
+			name:         "missing config warns and passes an empty key",
+			data:         map[string]any{"s": map[string]any{"driver": "fake"}},
+			constructor:  &fakeConstructor{name: "fake"},
+			warnSub:      "can't find local or global",
+			wantStorages: []string{"s"},
+			wantCfgKeys:  []string{""},
 		},
 	}
 
@@ -135,6 +162,9 @@ func TestPluginServeBranches(t *testing.T) {
 			}
 
 			assert.ElementsMatch(t, tc.wantStorages, slices.Collect(maps.Keys(p.storages)))
+			if tc.constructor != nil {
+				assert.Equal(t, tc.wantCfgKeys, tc.constructor.cfgKeys)
+			}
 		})
 	}
 }

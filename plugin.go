@@ -112,29 +112,22 @@ func (p *Plugin) Serve() chan error {
 			continue
 		}
 
+		var storageConfigKey string
 		switch {
 		// local configuration section key
 		case p.cfgPlugin.Has(configKey):
-			err := p.checkAndSaveStorage(ctx, drStr, k, configKey)
-			if err != nil {
-				errCh <- errors.E(op, err)
-				return errCh
-			}
+			storageConfigKey = configKey
 			// try global then
 		case p.cfgPlugin.Has(k):
-			err := p.checkAndSaveStorage(ctx, drStr, k, k)
-			if err != nil {
-				errCh <- errors.E(op, err)
-				return errCh
-			}
+			storageConfigKey = k
 		default:
 			p.log.Warn("can't find local or global configuration, this section will be skipped", "local", configKey, "global", k)
+		}
 
-			err := p.checkAndSaveStorage(ctx, drStr, k, "")
-			if err != nil {
-				errCh <- errors.E(op, err)
-				return errCh
-			}
+		err := p.checkAndSaveStorage(ctx, drStr, k, storageConfigKey)
+		if err != nil {
+			errCh <- errors.E(op, err)
+			return errCh
 		}
 	}
 
