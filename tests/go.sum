@@ -33,8 +33,8 @@ github.com/pelletier/go-toml/v2 v2.4.3 h1:GTRvJQutkOSftxIFD5xw9aepkYNuPWmVJpffdD
 github.com/pelletier/go-toml/v2 v2.4.3/go.mod h1:2gIqNv+qfxSVS7cM2xJQKtLSTLUE9V8t9Stt+h56mCY=
 github.com/roadrunner-server/api-go/v6 v6.0.0-beta.15 h1:GhhGo7ZPICegw/3GQGZW9Tv1aC9Tcz1lUK2xR+bah/I=
 github.com/roadrunner-server/api-go/v6 v6.0.0-beta.15/go.mod h1:36v1hw+B0drdJbKbgfXMtJmvKqo9CdhDidl3MKd7T1Q=
-github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.2 h1:GqsZzWQ5jMXRF1O/b8IqFz9PLpS7Ui0K4OyACLql2MI=
-github.com/roadrunner-server/api-plugins/v6 v6.0.0-beta.2/go.mod h1:2v4yUK5Kvbvq8C3IkDoBkuamq9h+7i/JLjyf7k1j5JM=
+github.com/roadrunner-server/api-plugins/v6 v6.0.0 h1:a8s4271vIeN+p7jXi+zsXjjjBPAuQ53Ki9Vf/BBEOyk=
+github.com/roadrunner-server/api-plugins/v6 v6.0.0/go.mod h1:2v4yUK5Kvbvq8C3IkDoBkuamq9h+7i/JLjyf7k1j5JM=
 github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.5 h1:Rr1kfQppf64kUb+PGXHkSmvyBHF7EcqQh+OLJao5tFI=
 github.com/roadrunner-server/boltdb/v6 v6.0.0-beta.5/go.mod h1:SIfFwXQ5YxsHKfGl2i0F5WN3ZOI6X2D66wPjrRV6kYc=
 github.com/roadrunner-server/config/v6 v6.0.0-beta.4 h1:C7cNPb441g7Uwo4nN0Ug7RZrwiFfx+UU7brFxVLBU50=
